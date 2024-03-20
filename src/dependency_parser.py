@@ -6,7 +6,8 @@ class DependencyParser:
 
     def train(self, processed_data_path, path_to_save):
         '''
-        train dependency parser on processed data; save model to model_path
+        train dependency parser on processed data; save trained model to model_path
+        so that some current instance of DependencyParser can use that exact model
         '''
         pass
 

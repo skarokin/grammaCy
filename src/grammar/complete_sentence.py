@@ -1,0 +1,1 @@
+# checks if sentence is complete, with a noun phrase and a verb phrase
