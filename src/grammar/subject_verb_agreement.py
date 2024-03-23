@@ -1,4 +1,5 @@
 # checks if subject and verb agree in number and tense
+# below rules come from a website lol
 # 1. if subject is singular/plural, verb must be singular/plural
 # 2. if multiple subjects connected by 'and', verb must be plural (need custom matching for noun chunks)
 # 3. if 1 subject and more than 1 verb, all verbs must be plural (need custom matching for verb phrases)
@@ -11,8 +12,7 @@
 # 9. some countable nouns are explicitly plural, i.e. 'earnings' 'proceeds', 'goods', 'odds', ...
 # 10. sentences with 'there is' or 'there are', verb (is/are) agrees with the noun that follows it
 # 11. collective nouns are singular
-# extra rules:
-# - cannot add numbers to noncount nouns
+
 
 import spacy
 from spacy import displacy
@@ -20,9 +20,11 @@ from spacy import displacy
 # temporary until our own model is trained
 nlp = spacy.load('en_core_web_sm')
 
-# a verb phrase is simply [helping verb(s) + main verb + prepositional phrase(s)] so we can use two pointer expansion
-# remember that adverb must come before the verb, and preposition must come after
 def extract_verb_phrases(token, doc):
+    '''
+    extracts the verb phrase of a given noun chunk's head verb with a two pointer expansion
+    - does this work for all cases??? (pranshu pls verify :D)
+    '''
     verb_phrases = []
     left = token.i
     right = token.i
@@ -34,24 +36,38 @@ def extract_verb_phrases(token, doc):
     return verb_phrases
 
 def extract_noun_chunks(doc):
-    return list(doc.noun_chunks)
+    '''
+    extract only those noun chunks that are subjects of verbs
+    extracting objects are unnecessary for subject-verb agreement
+    '''
+    return [nc for nc in doc.noun_chunks if nc.root.dep_ in ('nsubj', 'nsubjpass', 'csubj', 'csubjpass')]
 
 def subject_verb_relationship(doc):
-    # the i-th noun chunk is the subject of the i-th verb phrase
+    '''
+    returns two lists of noun chunks and verb phrases
+    where the i-th noun chunk is the subject of the i-th verb phrase
+    we can use zip() to iterate over both lists and check for agreement
+    '''
     noun_chunks = extract_noun_chunks(doc)
     verb_phrases = []
 
     for nc in noun_chunks:
-        if nc.root.head.pos_ == 'VERB' or nc.root.head.pos_ == 'AUX':
-            verb_phrases.extend(extract_verb_phrases(nc.root.head, doc))
+        verb_phrases.extend(extract_verb_phrases(nc.root.head, doc))
     
-    return noun_chunks[:len(verb_phrases)], verb_phrases
+    return noun_chunks, verb_phrases
 
-sentences = ['The dog quickly ran to the park.',
-             'She is sleeping in the house.',
-             'I just went to the store to buy a new computer.',
-             'My mousepad is a little bit dirty.',
-             'He has been working hard, but is still not making enough money.']
+# --------------------------------------------
+#                 TESTING
+# --------------------------------------------
+sentences = ['You have to let go of Katara if you want to master the Avatar State.',
+             'The Earth King has invited you to Lake Laogai.',
+             'Sokka may have been the best character in the show.',
+             'Azula might be the best firebender in the show.']
+
+# VBZ: 3rd person singular present, should be used with singular subjects
+# VBP: non-3rd person singular present, should be used with plural subjects
+# pranshu add extra tests if you wanna
+# btw you can do noun.morph.get('Number') to determine plurality, but you CANNOT do this with verbs
 
 for s in sentences:
     doc = nlp(s)
