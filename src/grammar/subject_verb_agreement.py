@@ -13,7 +13,6 @@
 # 10. sentences with 'there is' or 'there are', verb (is/are) agrees with the noun that follows it
 # 11. collective nouns are singular
 
-
 import spacy
 from spacy import displacy
 
@@ -28,9 +27,9 @@ def extract_verb_phrases(token, doc):
     verb_phrases = []
     left = token.i
     right = token.i
-    while left > 0 and doc[left-1].pos_ in ['AUX', 'ADV']:
+    while left > 0 and doc[left-1].pos_ in ['AUX', 'ADV', 'VERB']:
         left -= 1
-    while right < len(doc)-1 and doc[right+1].pos_ in ['AUX', 'ADP']:
+    while right < len(doc)-1 and doc[right+1].pos_ in ['AUX', 'ADP', 'VERB']:
         right += 1
     verb_phrases.append(doc[left:right+1])
     return verb_phrases
@@ -52,17 +51,22 @@ def subject_verb_relationship(doc):
     verb_phrases = []
 
     for nc in noun_chunks:
-        verb_phrases.extend(extract_verb_phrases(nc.root.head, doc))
+        if nc.root.head.pos_ in ('VERB', 'AUX'):
+            verb_phrases.extend(extract_verb_phrases(nc.root.head, doc))
     
     return noun_chunks, verb_phrases
 
 # --------------------------------------------
 #                 TESTING
 # --------------------------------------------
-sentences = ['You have to let go of Katara if you want to master the Avatar State.',
-             'The Earth King has invited you to Lake Laogai.',
-             'Sokka may have been the best character in the show.',
-             'Azula might be the best firebender in the show.']
+
+sentences = ['You have to let go of Katara if you want to master the Avatar State.', 'You have to lets go of Katara if you wants to master the Avatar State',
+             'Sokka may have been the best character in the show.', 'Sokka may has been the best character in the show.',
+             'Azula sits on the throne.', 'Azula sitting on the throne.', 'Azula sit on the throne.',
+             'Iroh loves drinking tea.', 'Iroh loves drink tea.',
+             'Iroh bends lightning.', 'Iroh bend lightning.']
+
+# 'to lets' is marked as a noun chunk; maybe we need to check whether the assigned POS is correct?
 
 # VBZ: 3rd person singular present, should be used with singular subjects
 # VBP: non-3rd person singular present, should be used with plural subjects
