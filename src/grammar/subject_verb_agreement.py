@@ -17,7 +17,7 @@ import spacy
 from spacy import displacy
 
 # temporary until our own model is trained
-nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load('en_core_web_lg')
 
 def extract_verb_phrases(token, doc):
     '''
@@ -27,9 +27,9 @@ def extract_verb_phrases(token, doc):
     verb_phrases = []
     left = token.i
     right = token.i
-    while left > 0 and doc[left-1].pos_ in ['AUX', 'ADV', 'VERB']:
+    while left > 0 and doc[left-1].pos_ in ['AUX', 'ADV', 'VERB', 'PART']:
         left -= 1
-    while right < len(doc)-1 and doc[right+1].pos_ in ['AUX', 'ADP', 'VERB']:
+    while right < len(doc)-1 and doc[right+1].pos_ in ['AUX', 'ADP', 'VERB', 'PART']:
         right += 1
     verb_phrases.append(doc[left:right+1])
     return verb_phrases
@@ -39,7 +39,7 @@ def extract_noun_chunks(doc):
     extract only those noun chunks that are subjects of verbs
     extracting objects are unnecessary for subject-verb agreement
     '''
-    return [nc for nc in doc.noun_chunks if nc.root.dep_ in ('nsubj', 'nsubjpass', 'csubj', 'csubjpass')]
+    return [nc for nc in doc.noun_chunks if nc.root.dep_ in ('nsubj', 'nsubjpass', 'csubj', 'csubjpass', )]
 
 def subject_verb_relationship(doc):
     '''
@@ -60,11 +60,12 @@ def subject_verb_relationship(doc):
 #                 TESTING
 # --------------------------------------------
 
-sentences = ['You have to let go of Katara if you want to master the Avatar State.', 'You have to lets go of Katara if you wants to master the Avatar State',
+sentences = ['You have to let go of Katara if you want to master the Avatar State.', 'You have to lets go of Katara if you wants to master the Avatar State.',
              'Sokka may have been the best character in the show.', 'Sokka may has been the best character in the show.',
-             'Azula sits on the throne.', 'Azula sitting on the throne.', 'Azula sit on the throne.',
+             'Azula sits on the throne.', 'Azula not sit on the throne.',
              'Iroh loves drinking tea.', 'Iroh loves drink tea.',
-             'Iroh bends lightning.', 'Iroh bend lightning.']
+             'Iroh bends lightning.', 'Iroh bend lightning.',
+             'I like to make jasmine tea.', 'I like to makes jasmine tea.', 'I likes to make jasmine tea.']
 
 # 'to lets' is marked as a noun chunk; maybe we need to check whether the assigned POS is correct?
 
@@ -74,8 +75,12 @@ sentences = ['You have to let go of Katara if you want to master the Avatar Stat
 # btw you can do noun.morph.get('Number') to determine plurality, but you CANNOT do this with verbs
 
 for s in sentences:
+    # if singular noun, check if verb agrees
+    # if plural noun, check if verb agrees
     doc = nlp(s)
     noun_chunks, verb_phrases = subject_verb_relationship(doc)
     print(noun_chunks, verb_phrases)
+    for nc, vp in zip(noun_chunks, verb_phrases):
+        print(f'verb morphologies: {[(v.text, v.morph) for v in vp]}')
 
 displacy.serve(list(nlp(s) for s in sentences), style='dep')
