@@ -39,7 +39,7 @@ def extract_noun_chunks(doc):
     extract only those noun chunks that are subjects of verbs
     extracting objects are unnecessary for subject-verb agreement
     '''
-    return [nc for nc in doc.noun_chunks if nc.root.dep_ in ('nsubj', 'nsubjpass', 'csubj', 'csubjpass', )]
+    return [nc for nc in doc.noun_chunks if nc.root.dep_ in ('nsubj', 'nsubjpass', 'csubj', 'csubjpass')]
 
 def subject_verb_relationship(doc):
     '''
@@ -60,13 +60,15 @@ def subject_verb_relationship(doc):
 #                 TESTING
 # --------------------------------------------
 
-sentences = ['You have to let go of Katara if you want to master the Avatar State.', 'You have to lets go of Katara if you wants to master the Avatar State.',
-             'Sokka may have been the best character in the show.', 'Sokka may has been the best character in the show.',
-             'Azula sits on the throne.', 'Azula not sit on the throne.',
-             'Iroh loves drinking tea.', 'Iroh loves drink tea.',
-             'Iroh bends lightning.', 'Iroh bend lightning.',
-             'I like to make jasmine tea.', 'I like to makes jasmine tea.', 'I likes to make jasmine tea.']
-
+sentences = [
+    'You have to let go of Katara if you want to master the Avatar State.', 'You have to lets go of Katara if you wants to master the Avatar State.',
+    'Sokka may have been the best character in the show.', 'Sokka may has been the best character in the show.',
+    'Aang and Katara are in love.', 'Aang and Katara is in love.',
+    'Toph became the greatest earthbender in the world.', 'Toph become the greatest earthbender in the world.',
+    'Jin always visits the Jasmine Dragon to see Zuko.', 'Jin always visit the Jasmine Dragon to see Zuko.',
+    'Zuko dressed as the Blue Spirit to save Aang.', 'Zuko dress as the Blue Spirit to save Aang.',
+    'He insists on check.'
+]
 # 'to lets' is marked as a noun chunk; maybe we need to check whether the assigned POS is correct?
 
 # VBZ: 3rd person singular present, should be used with singular subjects
@@ -81,6 +83,7 @@ for s in sentences:
     noun_chunks, verb_phrases = subject_verb_relationship(doc)
     print(noun_chunks, verb_phrases)
     for nc, vp in zip(noun_chunks, verb_phrases):
-        print(f'verb morphologies: {[(v.text, v.morph) for v in vp]}')
+        print(f'verb morphologies: {[(v.text, v.morph, v.tag_) for v in vp]}')
+        
 
 displacy.serve(list(nlp(s) for s in sentences), style='dep')
