@@ -8,3 +8,4 @@ although this paper (Grammar Checking with Dependency Parsing: A Possible Extens
 ### primary goals
 - hybrid grammar checking model will be deployed on cloud and available to use via web interface
 - etl pipeline for analytics on grammar mistakes
+- (if deemed possible) make a dataset that includes ungrammatical sentences; this would DRASTICALLY improve grammar checking performance and also allow us to use only the dependency parser without any extra hacks
