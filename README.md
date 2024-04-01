@@ -7,7 +7,7 @@ some parts of this project are inspired by 'Grammar Checking with Dependency Par
 
 ### to-do
 - make treebank augmentor to ensure that dependency relations are not changed when POS of a word is changed
- - e.g. if sentence has preposition + verb, change that verb to base form to ensure that the parser knows a preposition + base form verb is possible, and to not assign the base form verb as a noun or the preposition as something else
+    - e.g. if sentence has preposition + verb, change that verb to base form to ensure that the parser knows a preposition + base form verb is possible, and to not assign the base form verb as a noun or the preposition as something else
 
 ### primary goals
 - hybrid grammar checking model will be deployed on cloud and available to use via web interface
