@@ -23,6 +23,7 @@ sentences = [
     'This backpack was made for carry books.', 'This backpack was made for carrying books.',
     'I told him to going to the store', 'I told him to go to the store',
     'Zuko is known for betraying his uncle.', 'Zuko is known for betray his uncle.',
+    'That is for walking.', 'That is for walk.',
 ]
     
 
