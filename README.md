@@ -3,9 +3,12 @@ hybrid (ml + rule-based) grammar checker using spaCy's dependency parser
 - parse input sentence into dependency tree
 - walk tree, enforce predefined grammar rules
 
-although this paper (Grammar Checking with Dependency Parsing: A Possible Extension for LanguageTool) was not seen until well after development, the fixes to some of the problems encountered was inspired by it.
+some parts of this project are inspired by 'Grammar Checking with Dependency Parsing: A Possible Extension for LanguageTool'.
+
+### to-do
+- make treebank augmentor to ensure that dependency relations are not changed when POS of a word is changed
+ - e.g. if sentence has preposition + verb, change that verb to base form to ensure that the parser knows a preposition + base form verb is possible, and to not assign the base form verb as a noun or the preposition as something else
 
 ### primary goals
 - hybrid grammar checking model will be deployed on cloud and available to use via web interface
 - etl pipeline for analytics on grammar mistakes
-- (if deemed possible) make a dataset that includes ungrammatical sentences; this would DRASTICALLY improve grammar checking performance and also allow us to use only the dependency parser without any extra hacks
