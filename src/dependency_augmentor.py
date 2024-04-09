@@ -1,6 +1,6 @@
 # 1. takes in treebank from data/raw
 # 2. unpacks treebank into dictionary
-# 3. injects errors 
+# 3. injects errors
 # 4. repacks treebank into CoNLL-U format
 # 5. runs the preprocess script on augmented treebank
 # 6. saves augmented treebank in .spacy format to data/processed
