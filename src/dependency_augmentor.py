@@ -1,6 +1,6 @@
 # 1. takes in treebank from data/raw
 # 2. unpacks treebank into dictionary
-# 3. injects errors 
+# 3. injects errors
 # 4. repacks treebank into CoNLL-U format
 # 5. runs the preprocess script on augmented treebank
 # 6. saves augmented treebank in .spacy format to data/processed
@@ -14,19 +14,4 @@
 # ERRORS WE DONT NEED TO SIMULATE:
 #   - adjective + adverb: from empirical testing, current parser does just fine
 #   - subject-verb agreement: from empirical testing, current parser does just fine
-import spacy
-from spacy import displacy
 
-nlp = spacy.load('en_core_web_lg', disable=['ner'])
-
-sentences = [
-    'Akira Toriyama is known for create Dragon Ball.', 'Akira Toriyama is known for creating Dragon Ball.',
-    'This backpack was made for carry books.', 'This backpack was made for carrying books.',
-    'I told him to going to the store', 'I told him to go to the store',
-    'Zuko is known for betraying his uncle.', 'Zuko is known for betray his uncle.',
-    'That is for walking.', 'That is for walk.',
-    'This item is optimized for walking.', 'This item is optimized for walk the dogs.'
-]
-    
-
-displacy.serve(list(nlp(s) for s in sentences), style='dep')
