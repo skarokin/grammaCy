@@ -22,7 +22,6 @@ nlp = spacy.load('en_core_web_lg')
 def extract_verb_phrases(token, doc):
     '''
     extracts the verb phrase of a given noun chunk's head verb with a two pointer expansion
-    - does this work for all cases??? (pranshu pls verify :D)
     '''
     verb_phrases = []
     left = token.i
