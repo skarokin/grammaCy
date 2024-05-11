@@ -22,6 +22,7 @@ class Constituency2Dependency:
         print(f"found {count} .parse files")
         return files
     
+    # um for some reason i cant get this check working hahahaha so this is just here for future me to fix
     def __check_corenlp__(self):
         check_command = "java -mx1g edu.stanford.nlp.trees.ud.UniversalDependenciesConverter"
 
