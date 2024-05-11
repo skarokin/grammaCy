@@ -5,8 +5,11 @@ some parts of this project are inspired by "Grammar Checking with Dependency Par
 
 ### whats the point?
 rule-based systems are desirable for speed, flexibility, and also because they can generate a suggestion very quickly
+
 but... rule-based systems fail to keep up with the nuances of natural language
+
 by using a dependency parser, we can ensure our rule-based system keeps up with the nuances of natural language
+
 thus, we have an accurate, fast, and flexible grammar checker
 
 ### how it works
