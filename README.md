@@ -1,6 +1,9 @@
 ﻿# depparse-grammar
 hybrid ml + rule-based grammar checker using spaCy's dependency parser
 
+check out a showcase of a full-fledged English model [here]
+- in the future we will have a showcase for another language
+
 some parts of this project are inspired by "Grammar Checking with Dependency Parsing: A Possible Extension for LanguageTool" (Maxim Mozgovoy)
 
 ### whats the point?
