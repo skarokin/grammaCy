@@ -4,13 +4,7 @@ hybrid ml + rule-based grammar checker using spaCy's dependency parser
 some parts of this project are inspired by "Grammar Checking with Dependency Parsing: A Possible Extension for LanguageTool" (Maxim Mozgovoy)
 
 ### whats the point?
-rule-based systems are desirable for speed, flexibility, and also because they can generate a suggestion very quickly
-
-but... rule-based systems fail to keep up with the nuances of natural language
-
-by using a dependency parser, we can ensure our rule-based system keeps up with the nuances of natural language
-
-thus, we have an accurate, fast, and flexible grammar checker
+rule-based systems are desirable for speed and flexibility. they can also very quickly generate suggestions and are easy to debug. but... rule-based systems fail to keep up with the nuances of natural language. by using a dependency parser, we can ensure our rule-based system keeps up with the nuances of natural language. thus, we have an accurate, fast, and flexible grammar checker that generates suggestions quickly and is easy to debug.
 
 ### how it works
 - run input sentence through a POS tagger and dependency parser
@@ -29,7 +23,7 @@ thus, we have an accurate, fast, and flexible grammar checker
         - we did this for about 35% of the corpus, copying and appending it to the original dataset.
         - by using OntoNotes 5.0 as a baseline, the model understands both grammatical sentences and common mistakes
 4. converted augmented data into spaCy binary and trained their POS tagger and dependency parser on the augmented data
-5. finally, we have a model capable of producing correct POS tags and dependency trees to both gramamtical sentences and sentences with our desired grammar errors
+5. finally, we have a model capable of producing correct POS tags and dependency trees for both grammatical sentences and sentences with our desired grammar errors
     - from here, simply enforce rules by comparing the POS tags of a specific dependency relation
 
 ### how can i use it?
