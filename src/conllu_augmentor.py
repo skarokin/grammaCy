@@ -12,12 +12,19 @@ import spacy
 nlp = spacy.load('en_core_web_sm')
 
 # note: not perfect; sometimes generates extra forms that do not exist
-# its okay tho we can just ignore; only extract the pos tag of interest
-def get_forms(word):
+# extract first form that matches desired POS 
+def get_forms(word, pos):
     forms = get_word_forms(word)
-    print(forms)
-    for pos in forms:
-        for w in forms[pos]:
-            print(nlp(w)[0].tag_, w)
+    for p in forms:
+        for w in forms[p]:
+            curr = nlp(w)[0]
+            if curr.tag_ == pos:
+                return (curr.text, curr.tag_)
 
-get_forms('run')
+# for given .conllu file, find a specific dependency relation and specific POS tag to augment and whether to use head or child
+# create a new .conllu file with the augmented data and append the augmented data to original .conllu file (make sure we update sentence id)
+def augment_conllu(conllu_path, dep_rel, pos, child=False):
+    pass
+
+print(get_forms('run', 'VBG'))
+print(get_forms('amazing', 'RB'))
