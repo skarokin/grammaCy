@@ -18,17 +18,18 @@
 #       - suggest adding a preposition before the gerund OR making the gerund a past tense verb
 from word_forms.word_forms import get_word_forms
 import spacy
+import copy
+import random
+import os
 
 class ConlluAugmentor:
     '''A class to augment a dataset of .conllu files by injecting errors into sentences of interest'''
-
-    nlp = spacy.load('en_core_web_sm')    # since we are only using POS tagger, we can use small model
-
     # data_dir: directory containing .conllu files
     # rules: list of rule tuples [(dep_rel, pos, aug_pos, child=False, probability=0.5)] 
-    def __init__(self, data_dir, rules=None):
+    def __init__(self, data_dir, rules=None, model='en_core_web_sm'):
         self.data_dir = data_dir
         self.rules = rules
+        self.nlp = spacy.load(model) 
 
     # note: not perfect; sometimes generates extra forms that do not exist
     # extract first form that matches desired POS using spacy's POS tagger
@@ -67,10 +68,24 @@ class ConlluAugmentor:
             return
 
         self.rules.append(rule)
+
+    # returns augmented sentence
+    def augment_sentence(self, sentence):
+        for rule in self.rules:
+            dep_rel, pos, aug_pos, child, probability = rule
+            
+            aug_sentence = copy.deepcopy(sentence)
+            for index, word in enumerate(sentence):
+                if word[7] == dep_rel and word[3] == pos and random.uniform(0, 1) < probability: # word matches dependency relation and pos tag 
+                        aug_sentence[index][7] = aug_pos # augment
+                        return aug_sentence  
+        return []
+            
+            
             
     # open .conllu file and return formatted data
-    def open_conllu_file(self):
-        if not self.conllu_path.endswith('.conllu'):
+    def open_conllu_file(self, conllu_path):
+        if not conllu_path.endswith('.conllu'):
             return None
         
         with open(self.conllu_path, 'r') as f:
@@ -80,10 +95,30 @@ class ConlluAugmentor:
     # for given .conllu file, find a specific dependency relation and specific POS tag to augment and whether to use head or child
     # create a new .conllu file with the augmented data and append the augmented data to original .conllu file (make sure we update sentence id)
     # augments on a file-by-file basis, so we can run this on a deep traversal of the data directory
-    def augment_conllu_file(self, conllu_path, rules=None,):
-        if rules is None:
+    def augment_conllu_file(self, conllu_path):
+        if self.rules is None:
             raise ValueError('No rules specified for augmentation, aborting...')
+        formatted_data = self.open_conllu_file(conllu_path)
+        for sentence in formatted_data:
+            aug_sentence = self.augment_sentence(sentence)
+            if len(aug_sentence) != 0:
+            
+                # append augmented sentence to original .conllu file    
+                pass   
+
+            print("BRUH BRUH DO SOMETHING BRUH POLS")
 
     # augment entire dataset by traversing data directory and augmenting each .conllu file according to rules in add_rules
     def augment_dataset(self):
+
+        try:
+            for filename in os.walk(self.data_dir): # change
+                f = os.path.join(self.data_dir, filename)
+                # checking if it is a file
+                if os.path.isfile(f):
+                    self.augment_collu_file(f)
+
+        except Exception as e:
+            print(f'Error augmenting dataset: {e}')
+
         pass
