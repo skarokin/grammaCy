@@ -21,6 +21,11 @@ import spacy
 import copy
 import random
 import os
+import concurrent.futures as cf
+from threading import Thread
+from threading import Lock
+import time
+import traceback
 
 class ConlluAugmentor:
     '''A class to augment a dataset of .conllu files by injecting errors into sentences of interest'''
@@ -117,32 +122,107 @@ class ConlluAugmentor:
     # for given .conllu file, find a specific dependency relation and specific POS tag to augment and whether to use head or child
     # create a new .conllu file with the augmented data and append the augmented data to original .conllu file (make sure we update sentence id)
     # augments on a file-by-file basis, so we can run this on a deep traversal of the data directory
-    def augment_conllu_file(self, conllu_path: str):
+    def augment_conllu_file(self, conllu_path: str, file, lock: Lock):
         if self.rules is None:
             raise ValueError('No rules specified for augmentation, aborting...')
-
         formatted_data = self.open_conllu_file(conllu_path)
-        aug_formatted_data = copy.deepcopy(formatted_data)
-        count = 0
+        print(f'Augmenting {conllu_path}...')
 
         for sentence in formatted_data:
             aug_sentence = self.augment_sentence(sentence)
+            if aug_sentence != []:
+                with lock:
+                    file.write(f'{aug_sentence}\n')
+
+
+    def augment_conllu_file_non_threaded(self, conllu_path:str, file):
+        if self.rules is None:
+            raise ValueError('No rules specified for augmentation, aborting...')
+        formatted_data = self.open_conllu_file(conllu_path)
+        print(f'Augmenting {conllu_path}...')
+        for sentence in formatted_data:
+            aug_sentence = self.augment_sentence(sentence)
+            if aug_sentence != []:
+                file.write(f'{aug_sentence}\n')
                 
-            if len(aug_sentence) > 0:
-                aug_formatted_data.append(aug_sentence)
-                final_string = '# sent_id = ' + str(count) +'\n' + '\n'.join(['\t'.join(word) for word in aug_sentence])
-                print(final_string)    # temp; must output to new file later
-                count += 1
+
+        
+        
 
     # augment entire dataset by traversing data directory and augmenting each .conllu file according to rules in add_rules
     def augment_dataset(self):
         try:
+            count = 0
+            out_dir = self.data_dir + '/augmented_bench'
             for root, _, filenames in os.walk(self.data_dir):
                 for filename in filenames:
+                    if filename[:6] == 'tr_aug' or filename[-6:] != "conllu": continue
                     f = os.path.join(root, filename)
-                    self.augment_conllu_file(f)
+                    out_file = open(f'{out_dir}/tr_aug_{count}.conllu', 'a')
+                    count +=1
+                    self.augment_conllu_file_non_threaded(f,out_file)
+                    out_file.close()
+        except Exception as e:
+            print(f'Error augmenting dataset: {e}') 
+            traceback.print_exc()
+
+    
+
+    def run_batch(self, args: tuple[int, list[str]]):
+        number, files = args
+        print(f"Running batch {number}")
+        # create the shared lock
+        lock = Lock()
+        
+        out_dir = self.data_dir + '/augmented'
+        # open the file
+        out_file = open(f'{out_dir}/tr_aug_{number}.conllu', 'a')
+        # configure many threads
+        threads = [Thread(target=self.augment_conllu_file, args=(file,out_file,lock)) for file in files]
+        # start threads
+        for thread in threads:
+            thread.start()
+        # wait for threads to finish
+        for thread in threads:
+            thread.join()
+        # close the file
+        out_file.close()
+
+    # multi-processing version of ConlluAugmentor
+    # default thread == 10 
+    def run(self, threads: int):
+        try:
+            start = time.time()
+            batches = []
+            counter = 0
+            for root, _, filenames in os.walk(self.data_dir):
+                batch = []
+                
+                for filename in filenames:
+                    if filename[:6] == 'tr_aug' or filename[-6:] != "conllu": continue
+                    f = os.path.join(root, filename)
+                    batch.append(f)
+                    if len(batch) == threads:
+                        batches.append((counter, batch))
+                        counter += 1
+                        batch = []
+
+                if len(batch) != 0: batches.append((counter, batch)) # last batch
+
+            end = time.time()
+            print(f"Batching Finished in {end-start} seconds")
+
+            start = time.time()
+            # run batches in parallel
+            with cf.ProcessPoolExecutor() as executor:
+                executor.map(self.run_batch, batches)
+            end = time.time()
+
+            print(f"Execution Finished in {end-start} seconds")
         except Exception as e:
             print(f'Error augmenting dataset: {e}')
+            traceback.print_exc()
+
 
 # testing testing :3
 def main():
@@ -151,7 +231,17 @@ def main():
     # list of old tags to consider, new tag to change old tag to, whether to change child or head, probability of changing
     rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 1.0)]
     ca = ConlluAugmentor(data_dir, rules=rules)
-    ca.augment_conllu_file('sample_data/raw/validate/a2e_0010.conllu')
+    start = time.time()
+    ca.augment_dataset()
+    end = time.time()
+
+    print(f"Finished in {end-start} seconds")
+
+    print() 
+    start = time.time()
+    ca.run(2)
+    end = time.time()
+    print(f"Finished in {end-start} seconds")
 
 if __name__ == "__main__":
     main()
