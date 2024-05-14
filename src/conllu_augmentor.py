@@ -37,7 +37,7 @@ class ConlluAugmentor:
     # note: not perfect; sometimes generates extra forms that do not exist
     # extract first form that matches desired POS using spacy's POS tagger
     def get_forms(self, word: str, tag: str) -> str:
-        forms = get_word_forms(self.nlp(word)[0].lemma_)
+        forms = get_word_forms(word)
         for p in forms:
             for w in forms[p]:
                 curr = self.nlp(w)[0]
@@ -92,7 +92,7 @@ class ConlluAugmentor:
                 if word[7] == dep_rel and word[3] in child_pos_list and sentence[int(word[6])-1][3] in head_pos_list and random.uniform(0, 1) < probability: 
                         # update tag of child
                         if child and sentence[index][4] in old_tag_list:
-                            new_form = self.get_forms(word[1], aug_tag)
+                            new_form = self.get_forms(word[2], aug_tag)
                             if new_form:
                                 aug_sentence[index][4] = aug_tag
                                 aug_sentence[index][1] = new_form
@@ -101,7 +101,7 @@ class ConlluAugmentor:
                         # update tag of head
                         elif int(word[6]) > 0 and sentence[int(word[6])-1][4] in old_tag_list:
                             head_index = int(word[6]) - 1    # because head is 1-indexed
-                            new_form = self.get_forms(sentence[head_index][1], aug_tag)
+                            new_form = self.get_forms(sentence[head_index][2], aug_tag)
                             if new_form:
                                 aug_sentence[head_index][4] = aug_tag 
                                 aug_sentence[head_index][1] = new_form

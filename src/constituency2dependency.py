@@ -1,7 +1,7 @@
 # converts PTB constituency trees to CoNLL-U dependency trees
 # uses Stanford CoreNLP conversion script (make sure you have this installed)
 # augmentor.py expects CoNLL-U, ensure you run this if your data is PTB format (like OntoNotes 5.0)
-# FUTURE: multithread; this takes like 2.5 hours for OntoNotes
+# FUTURE: multithread; this takes like 2.5 hours for OntoNotes 
 import os
 import subprocess
 
