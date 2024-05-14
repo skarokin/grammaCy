@@ -21,7 +21,7 @@ import spacy
 import copy
 import random
 import os
-
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 class ConlluAugmentor:
     '''A class to augment a dataset of .conllu files by injecting errors into sentences of interest'''
     # data_dir: directory containing .conllu files
@@ -71,10 +71,11 @@ class ConlluAugmentor:
 
     # returns augmented sentence
     def augment_sentence(self, sentence):
-        for rule in self.rules:
+        shuffled_rules = random.sample( self.rules, len(self.rules))
+        aug_sentence = copy.deepcopy(sentence)
+        print(shuffled_rules)
+        for rule in shuffled_rules:
             dep_rel, pos, aug_pos, child, probability = rule
-            
-            aug_sentence = copy.deepcopy(sentence)
             for index, word in enumerate(sentence):
                 if word[7] == dep_rel and word[3] == pos and random.uniform(0, 1) < probability: # word matches dependency relation and pos tag 
                         if child: 
@@ -89,10 +90,11 @@ class ConlluAugmentor:
             
     # open .conllu file and return formatted data
     def open_conllu_file(self, conllu_path):
+        print("conllu_path: " + conllu_path)
         if not conllu_path.endswith('.conllu'):
             return None
         
-        with open(self.conllu_path, 'r') as f:
+        with open(conllu_path, 'r') as f:
             data = f.read()
         return self.format_data(data)
 
@@ -102,29 +104,32 @@ class ConlluAugmentor:
     def augment_conllu_file(self, conllu_path):
         if self.rules is None:
             raise ValueError('No rules specified for augmentation, aborting...')
+        print("calling open_conllu_file")
         formatted_data = self.open_conllu_file(conllu_path)
-        if len(formatted_data) > 20: 
-            pass # make new file
+        aug_formatted_data = copy.deepcopy(formatted_data)
         for sentence in formatted_data:
+            print("calling augment_sentence")
             aug_sentence = self.augment_sentence(sentence)
             if len(aug_sentence) != 0:
-            
-                # append augmented sentence to original .conllu file    
-                pass   
+                aug_formatted_data.append(aug_sentence)
+                final_string = '# sent_id = ' + str(len(formatted_data)) + '\n'.join(['\t'.join(word) for word in aug_sentence])
+                print(final_string)
 
-            print("BRUH BRUH DO SOMETHING BRUH POLS")
 
     # augment entire dataset by traversing data directory and augmenting each .conllu file according to rules in add_rules
     def augment_dataset(self):
-
+        print(ROOT_DIR)
         try:
-            for filename in os.walk(self.data_dir): # change
-                f = os.path.join(self.data_dir, filename)
-                # checking if it is a file
-                if os.path.isfile(f):
-                    self.augment_collu_file(f)
+            for root, _, filenames in os.walk(self.data_dir): # change
+                print(filenames)
+                for filename in filenames:
+                    f = os.path.join(root, filename)
+                    # checking if it is a file
+
+                    print("calling augment_conllu_file")
+                    print("file path: " + f)
+                    self.augment_conllu_file(f)
 
         except Exception as e:
             print(f'Error augmenting dataset: {e}')
 
-        pass
