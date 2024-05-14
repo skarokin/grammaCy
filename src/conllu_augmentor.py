@@ -62,8 +62,8 @@ class ConlluAugmentor:
         
         return splitted_data
     
-    # look for specific relation between two words and inject desired error
-    def add_rules(self, rule):
+    # add a rule to list of rules
+    def add_rule(self, rule: tuple[any]):
         # if dep_rel, pos, aug_tag already exists, this is a duplicate rule
         if (rule[0], rule[1], rule[2]) in self.rules:
             return
@@ -96,9 +96,8 @@ class ConlluAugmentor:
                             if new_form:
                                 aug_sentence[index][4] = aug_tag
                                 aug_sentence[index][1] = new_form
-                            # no augmentation possible
                             else:
-                                return []
+                                return []    # no augmentation possible
                         # update tag of head
                         elif int(word[6]) > 0 and sentence[int(word[6])-1][4] in old_tag_list:
                             head_index = int(word[6]) - 1    # because head is 1-indexed
@@ -106,9 +105,8 @@ class ConlluAugmentor:
                             if new_form:
                                 aug_sentence[head_index][4] = aug_tag 
                                 aug_sentence[head_index][1] = new_form
-                            # no augmentation possible
                             else:
-                                return []
+                                return []    # no augmentation possible
                         else:
                             continue    
                         
@@ -126,14 +124,14 @@ class ConlluAugmentor:
         formatted_data = self.open_conllu_file(conllu_path)
         aug_formatted_data = copy.deepcopy(formatted_data)
         count = 0
-        
+
         for sentence in formatted_data:
             aug_sentence = self.augment_sentence(sentence)
                 
             if len(aug_sentence) > 0:
                 aug_formatted_data.append(aug_sentence)
                 final_string = '# sent_id = ' + str(count) +'\n' + '\n'.join(['\t'.join(word) for word in aug_sentence])
-                print(final_string)
+                print(final_string)    # temp; must output to new file later
                 count += 1
 
     # augment entire dataset by traversing data directory and augmenting each .conllu file according to rules in add_rules
@@ -143,12 +141,14 @@ class ConlluAugmentor:
                 for filename in filenames:
                     f = os.path.join(root, filename)
                     self.augment_conllu_file(f)
-
         except Exception as e:
             print(f'Error augmenting dataset: {e}')
 
+# testing testing :3
 def main():
     data_dir = 'sample_data'
+    # dep_rel to look for, list of possible child POS, list of possible head POS, 
+    # list of old tags to consider, new tag to change old tag to, whether to change child or head, probability of changing
     rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 1.0)]
     ca = ConlluAugmentor(data_dir, rules=rules)
     ca.augment_conllu_file('sample_data/raw/validate/a2e_0010.conllu')
