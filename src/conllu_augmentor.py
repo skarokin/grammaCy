@@ -77,7 +77,11 @@ class ConlluAugmentor:
             aug_sentence = copy.deepcopy(sentence)
             for index, word in enumerate(sentence):
                 if word[7] == dep_rel and word[3] == pos and random.uniform(0, 1) < probability: # word matches dependency relation and pos tag 
-                        aug_sentence[index][7] = aug_pos # augment
+                        if child: 
+                            child_index = word[6] # get child index
+                            aug_sentence[child_index][7] = aug_pos # augment
+                        else:
+                            aug_sentence[index][7] = aug_pos # augment
                         return aug_sentence  
         return []
             
@@ -99,6 +103,8 @@ class ConlluAugmentor:
         if self.rules is None:
             raise ValueError('No rules specified for augmentation, aborting...')
         formatted_data = self.open_conllu_file(conllu_path)
+        if len(formatted_data) > 20: 
+            pass # make new file
         for sentence in formatted_data:
             aug_sentence = self.augment_sentence(sentence)
             if len(aug_sentence) != 0:
