@@ -1,0 +1,862 @@
+# sent_id = 0
+1	Very	very	ADV	RB	_	2	advmod	_	_
+2	urgent	urgent	ADJ	JJ	_	7	dep	_	_
+3	...	...	SYM	NFP	_	7	punct	_	_
+4	(	(	PUNCT	-LRB-	_	7	punct	_	_
+5	new	new	ADJ	JJ	_	7	amod	_	_
+6	)	)	PUNCT	-RRB-	_	7	punct	_	_
+7	film	film	NOUN	NN	_	0	root	_	_
+8	of	of	ADP	IN	_	9	case	_	_
+9	Saddam	Saddam	PROPN	NNP	_	7	nmod	_	_
+10	...	...	SYM	NFP	_	9	punct	_	_
+11	after	after	ADP	IN	_	13	case	_	_
+12	the	the	DET	DT	_	13	det	_	_
+13	torture	torture	NOUN	NN	_	9	nmod	_	_
+14	by	by	ADP	IN	_	16	case	_	_
+15	the	the	DET	DT	_	16	det	_	_
+16	Rafida	Rafida	PROPN	NNP	_	13	nmod	_	_
+17	(	(	PUNCT	-LRB-	_	20	punct	_	_
+18	the	the	DET	DT	_	20	det	_	_
+19	throat	throat	NOUN	NN	_	20	compound	_	_
+20	cutting	cutting	NOUN	NN	_	13	appos	_	_
+21	)	)	PUNCT	-RRB-	_	20	punct	_	_
+22	!!!	!!!	PUNCT	.	_	7	punct	_	_
+
+# sent_id = 1
+1	Ibn	Ibn	PROPN	NNP	_	4	compound	_	_
+2	al	al	PROPN	NNP	_	4	compound	_	_
+3	-	-	PUNCT	HYPH	_	4	punct	_	_
+4	Faqeer	Faqeer	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 2
+1	Upload	upload	VERB	VB	_	0	root	_	_
+2	the	the	DET	DT	_	3	det	_	_
+3	film	film	NOUN	NN	_	1	obj	_	_
+4	.	.	PUNCT	.	_	1	punct	_	_
+
+# sent_id = 3
+1	The	the	DET	DT	_	3	det	_	_
+2	operating	operating	NOUN	NN	_	3	compound	_	_
+3	program	program	NOUN	NN	_	0	root	_	_
+4	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 4
+1	A	a	DET	DT	_	2	det	_	_
+2	film	film	NOUN	NN	_	0	root	_	_
+3	depicting	depict	VERB	VBG	_	2	acl	_	_
+4	the	the	DET	DT	_	5	det	_	_
+5	vileness	vileness	NOUN	NN	_	3	obj	_	_
+6	the	the	DET	DT	_	7	det	_	_
+7	Rafida	Rafida	PROPN	NNP	_	8	nsubj	_	_
+8	reached	reach	VERB	VBD	_	5	acl:relcl	_	_
+9	in	in	SCONJ	IN	_	10	mark	_	_
+10	dealing	deal	VERB	VBG	_	8	advcl	_	_
+11	with	with	ADP	IN	_	12	case	_	_
+12	Saddam	Saddam	PROPN	NNP	_	10	obl	_	_
+13	...	...	SYM	NFP	_	8	punct	_	_
+14	cutting	cut	VERB	VBG	_	8	xcomp	_	_
+15	his	he	PRON	PRP$	_	16	nmod:poss	_	_
+16	throat	throat	NOUN	NN	_	14	obj	_	_
+17	by	by	SCONJ	IN	_	18	mark	_	_
+18	kicking	kick	VERB	VBG	_	14	advcl	_	_
+19	him	he	PRON	PRP	_	18	obj	_	_
+20	in	in	ADP	IN	_	22	case	_	_
+21	his	he	PRON	PRP$	_	22	nmod:poss	_	_
+22	face	face	NOUN	NN	_	18	obl	_	_
+23	,	,	PUNCT	,	_	8	punct	_	_
+24	may	may	AUX	MD	_	27	aux	_	_
+25	they	they	PRON	PRP	_	27	nsubj:pass	_	_
+26	be	be	AUX	VB	_	27	aux:pass	_	_
+27	cursed	curse	VERB	VBN	_	8	parataxis	_	_
+28	by	by	ADP	IN	_	29	case	_	_
+29	God	God	PROPN	NNP	_	27	obl	_	_
+30	.	.	PUNCT	.	_	2	punct	_	_
+
+# sent_id = 5
+1	Please	please	INTJ	UH	_	2	discourse	_	_
+2	publish	publish	VERB	VB	_	0	root	_	_
+3	the	the	DET	DT	_	4	det	_	_
+4	film	film	NOUN	NN	_	2	obj	_	_
+5	on	on	ADP	IN	_	8	case	_	_
+6	the	the	DET	DT	_	8	det	_	_
+7	satellite	satellite	NOUN	NN	_	8	compound	_	_
+8	channels	channel	NOUN	NNS	_	2	obl	_	_
+9	so	so	SCONJ	IN	_	13	mark	_	_
+10	that	that	SCONJ	IN	_	9	fixed	_	_
+11	everyone	everyone	PRON	NN	_	13	nsubj	_	_
+12	will	will	AUX	MD	_	13	aux	_	_
+13	know	know	VERB	VB	_	2	advcl	_	_
+14	how	how	ADV	WRB	_	15	advmod	_	_
+15	cowardly	cowardly	ADJ	JJ	_	18	dep	_	_
+16	these	this	DET	DT	_	17	det	_	_
+17	bastards	bastard	NOUN	NNS	_	18	nsubj	_	_
+18	are	be	VERB	VBP	_	13	ccomp	_	_
+19	.	.	PUNCT	.	_	2	punct	_	_
+
+# sent_id = 6
+1	The	the	DET	DT	_	2	det	_	_
+2	film	film	NOUN	NN	_	5	nsubj	_	_
+3	is	be	AUX	VBZ	_	5	cop	_	_
+4	a	a	DET	DT	_	5	det	_	_
+5	copy	copy	NOUN	NN	_	0	root	_	_
+6	of	of	ADP	IN	_	8	case	_	_
+7	the	the	DET	DT	_	8	det	_	_
+8	film	film	NOUN	NN	_	5	nmod	_	_
+9	which	which	PRON	WDT	_	11	nsubj:pass	_	_
+10	was	be	AUX	VBD	_	11	aux:pass	_	_
+11	taken	take	VERB	VBN	_	8	acl:relcl	_	_
+12	after	after	ADP	IN	_	14	case	_	_
+13	his	he	PRON	PRP$	_	14	nmod:poss	_	_
+14	execution	execution	NOUN	NN	_	11	obl	_	_
+15	on	on	ADP	IN	_	17	case	_	_
+16	the	the	DET	DT	_	17	det	_	_
+17	morning	morning	NOUN	NN	_	14	nmod	_	_
+18	of	of	ADP	IN	_	21	case	_	_
+19	the	the	DET	DT	_	21	det	_	_
+20	blessed	blessed	ADJ	JJ	_	21	amod	_	_
+21	Eid	Eid	PROPN	NNP	_	17	nmod	_	_
+22	.	.	PUNCT	.	_	5	punct	_	_
+
+# sent_id = 7
+1	From	from	ADP	IN	_	5	case	_	_
+2	the	the	DET	DT	_	5	det	_	_
+3	Moslem	Moslem	PROPN	NNP	_	5	compound	_	_
+4	picture	picture	NOUN	NN	_	5	compound	_	_
+5	archives	archive	NOUN	NNS	_	10	obl	_	_
+6	,	,	PUNCT	,	_	10	punct	_	_
+7	his	he	PRON	PRP$	_	8	nmod:poss	_	_
+8	heart	heart	NOUN	NN	_	10	nsubj:pass	_	_
+9	was	be	AUX	VBD	_	10	aux:pass	_	_
+10	ripped	rip	VERB	VBN	_	0	root	_	_
+11	out	out	ADP	RP	_	10	compound:prt	_	_
+12	by	by	ADP	IN	_	14	case	_	_
+13	the	the	DET	DT	_	14	det	_	_
+14	Rafida	Rafida	PROPN	NNP	_	10	obl	_	_
+15	.	.	PUNCT	.	_	10	punct	_	_
+
+# sent_id = 8
+1	Here	here	ADV	RB	_	3	advmod	_	_
+2	we	we	PRON	PRP	_	3	nsubj	_	_
+3	are	be	VERB	VBP	_	0	root	_	_
+4	saying	say	VERB	VBG	_	3	xcomp	_	_
+5	good	good	INTJ	UH	_	4	discourse	_	_
+6	-	-	PUNCT	HYPH	_	5	punct	_	_
+7	bye	bye	INTJ	UH	_	5	dep	_	_
+8	to	to	ADP	IN	_	10	case	_	_
+9	another	another	DET	DT	_	10	det	_	_
+10	year	year	NOUN	NN	_	4	obl	_	_
+11	...	...	SYM	NFP	_	3	punct	_	_
+12	what	what	DET	WDT	_	14	det	_	_
+13	a	a	DET	DT	_	14	det	_	_
+14	pity	pity	NOUN	NN	_	18	dep	_	_
+15	that	that	SCONJ	IN	_	18	mark	_	_
+16	we	we	PRON	PRP	_	18	nsubj	_	_
+17	were	be	AUX	VBD	_	18	cop	_	_
+18	negligent	negligent	ADJ	JJ	_	3	parataxis	_	_
+19	in	in	ADP	IN	_	20	case	_	_
+20	it	it	PRON	PRP	_	18	obl	_	_
+21	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 9
+1	Abu	Abu	PROPN	NNP	_	2	compound	_	_
+2	Dilama	Dilama	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 10
+1	The	the	DET	DT	_	2	det	_	_
+2	film	film	NOUN	NN	_	5	nsubj:pass	_	_
+3	can	can	AUX	MD	_	5	aux	_	_
+4	be	be	AUX	VB	_	5	aux:pass	_	_
+5	found	find	VERB	VBN	_	0	root	_	_
+6	on	on	ADP	IN	_	9	case	_	_
+7	the	the	DET	DT	_	9	det	_	_
+8	following	follow	VERB	VBG	_	9	amod	_	_
+9	links	link	NOUN	NNS	_	5	obl	_	_
+10	in	in	ADP	IN	_	13	case	_	_
+11	the	the	DET	DT	_	13	det	_	_
+12	avi	avi	NOUN	NN	_	13	compound	_	_
+13	format	format	NOUN	NN	_	5	obl	_	_
+14	and	and	CCONJ	CC	_	18	cc	_	_
+15	it	it	PRON	PRP	_	18	nsubj:pass	_	_
+16	can	can	AUX	MD	_	18	aux	_	_
+17	be	be	AUX	VB	_	18	aux:pass	_	_
+18	played	play	VERB	VBN	_	5	conj	_	_
+19	using	use	VERB	VBG	_	18	xcomp	_	_
+20	the	the	DET	DT	_	23	det	_	_
+21	Real	Real	PROPN	NNP	_	22	compound	_	_
+22	Player	Player	PROPN	NNP	_	23	compound	_	_
+23	program	program	NOUN	NN	_	19	obj	_	_
+24	.	.	PUNCT	.	_	5	punct	_	_
+
+# sent_id = 11
+1	The	the	DET	DT	_	2	det	_	_
+2	size	size	NOUN	NN	_	9	nsubj	_	_
+3	of	of	ADP	IN	_	5	case	_	_
+4	the	the	DET	DT	_	5	det	_	_
+5	file	file	NOUN	NN	_	2	nmod	_	_
+6	is	be	AUX	VBZ	_	9	cop	_	_
+7	=	=	SYM	SYM	_	9	dep	_	_
+8	3	3	NUM	CD	_	9	nummod	_	_
+9	mb	mb	NOUN	NNS	_	0	root	_	_
+
+# sent_id = 12
+1	We	we	PRON	PRP	_	2	nsubj	_	_
+2	ask	ask	VERB	VBP	_	0	root	_	_
+3	our	we	PRON	PRP$	_	4	nmod:poss	_	_
+4	brothers	brother	NOUN	NNS	_	2	obj	_	_
+5	and	and	CCONJ	CC	_	6	cc	_	_
+6	sisters	sister	NOUN	NNS	_	4	conj	_	_
+7	to	to	PART	TO	_	8	mark	_	_
+8	upload	upload	VERB	VB	_	2	xcomp	_	_
+9	the	the	DET	DT	_	10	det	_	_
+10	film	film	NOUN	NN	_	8	obj	_	_
+11	to	to	ADP	IN	_	13	case	_	_
+12	other	other	ADJ	JJ	_	13	amod	_	_
+13	sites	site	NOUN	NNS	_	8	obl	_	_
+14	...	...	SYM	NFP	_	2	punct	_	_
+15	because	because	ADP	IN	_	18	case	_	_
+16	of	of	ADP	IN	_	15	fixed	_	_
+17	its	its	PRON	PRP$	_	18	nmod:poss	_	_
+18	importance	importance	NOUN	NN	_	2	obl	_	_
+19	.	.	PUNCT	.	_	2	punct	_	_
+
+# sent_id = 13
+1	---	---	PUNCT	NFP	_	0	root	_	_
+
+# sent_id = 14
+1	http://z12.zupload.com/download.php?file=getfile&filepath=6894	http://z12.zupload.com/download.php?file=getfile&filepath=6894	X	ADD	_	0	root	_	_
+
+# sent_id = 15
+1	---	---	PUNCT	NFP	_	0	root	_	_
+
+# sent_id = 16
+1	http://www.furk.net/newsadam.avi.html	http://www.furk.net/newsadam.avi.html	X	ADD	_	0	root	_	_
+
+# sent_id = 17
+1	For	for	ADP	IN	_	2	case	_	_
+2	correspondence	correspondence	NOUN	NN	_	0	root	_	_
+3	:	:	PUNCT	:	_	2	punct	_	_
+4	--	--	PUNCT	.	_	2	punct	_	_
+
+# sent_id = 18
+1	alisau@gmail.com	alisau@gmail.com	X	ADD	_	0	root	_	_
+
+# sent_id = 19
+1	Abu	Abu	PROPN	NNP	_	2	compound	_	_
+2	Dilama	Dilama	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 20
+1	Google	Google	PROPN	NNP	_	3	nsubj	_	_
+2	is	be	AUX	VBZ	_	3	aux	_	_
+3	broadcasting	broadcast	VERB	VBG	_	0	root	_	_
+4	a	a	DET	DT	_	7	det	_	_
+5	new	new	ADJ	JJ	_	7	amod	_	_
+6	video	video	NOUN	NN	_	7	compound	_	_
+7	recording	recording	NOUN	NN	_	3	obj	_	_
+8	of	of	ADP	IN	_	11	case	_	_
+9	Saddam	Saddam	PROPN	NNP	_	11	nmod:poss	_	_
+10	's	's	PART	POS	_	9	case	_	_
+11	corpse	corpse	NOUN	NN	_	7	nmod	_	_
+12	after	after	ADP	IN	_	14	case	_	_
+13	his	he	PRON	PRP$	_	14	nmod:poss	_	_
+14	execution	execution	NOUN	NN	_	11	nmod	_	_
+15	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 21
+1	A	a	DET	DT	_	4	det	_	_
+2	new	new	ADJ	JJ	_	4	amod	_	_
+3	video	video	NOUN	NN	_	4	compound	_	_
+4	recording	recording	NOUN	NN	_	30	nsubj:pass	_	_
+5	depicting	depict	VERB	VBG	_	4	acl	_	_
+6	the	the	DET	DT	_	7	det	_	_
+7	corpse	corpse	NOUN	NN	_	5	obj	_	_
+8	of	of	ADP	IN	_	12	case	_	_
+9	the	the	DET	DT	_	12	det	_	_
+10	late	late	ADJ	JJ	_	12	amod	_	_
+11	Iraqi	Iraqi	ADJ	JJ	_	12	amod	_	_
+12	president	president	NOUN	NN	_	7	nmod	_	_
+13	Saddam	Saddam	PROPN	NNP	_	14	compound	_	_
+14	Hussein	Hussein	PROPN	NNP	_	12	dep	_	_
+15	after	after	ADP	IN	_	12	dep	_	_
+16	his	he	PRON	PRP$	_	17	nmod:poss	_	_
+17	execution	execution	NOUN	NN	_	15	dep	_	_
+18	on	on	ADP	IN	_	20	case	_	_
+19	the	the	DET	DT	_	20	det	_	_
+20	morning	morning	NOUN	NN	_	17	nmod	_	_
+21	of	of	ADP	IN	_	24	case	_	_
+22	the	the	DET	DT	_	24	det	_	_
+23	first	first	ADJ	JJ	_	24	amod	_	_
+24	day	day	NOUN	NN	_	20	nmod	_	_
+25	of	of	ADP	IN	_	28	case	_	_
+26	the	the	DET	DT	_	28	det	_	_
+27	Eidul	Eidul	PROPN	NNP	_	28	compound	_	_
+28	Adha	Adha	PROPN	NNP	_	24	nmod	_	_
+29	was	be	AUX	VBD	_	30	aux:pass	_	_
+30	broadcasted	broadcast	VERB	VBN	_	0	root	_	_
+31	Monday	Monday	PROPN	NNP	_	32	compound	_	_
+32	evening	evening	NOUN	NN	_	30	obl:tmod	_	_
+33	on	on	ADP	IN	_	37	case	_	_
+34	the	the	DET	DT	_	37	det	_	_
+35	Google	Google	PROPN	NNP	_	37	compound	_	_
+36	Internet	internet	NOUN	NN	_	37	compound	_	_
+37	website	website	NOUN	NN	_	30	obl	_	_
+38	.	.	PUNCT	.	_	30	punct	_	_
+
+# sent_id = 22
+1	The	the	DET	DT	_	2	det	_	_
+2	video	video	NOUN	NN	_	3	nsubj	_	_
+3	shows	show	VERB	VBZ	_	0	root	_	_
+4	Saddam	Saddam	PROPN	NNP	_	5	compound	_	_
+5	Hussein	Hussein	PROPN	NNP	_	6	nsubj	_	_
+6	lying	lie	VERB	VBG	_	3	dep	_	_
+7	covered	cover	VERB	VBN	_	6	dep	_	_
+8	on	on	ADP	IN	_	10	case	_	_
+9	a	a	DET	DT	_	10	det	_	_
+10	stretcher	stretcher	NOUN	NN	_	6	obl	_	_
+11	whilst	whilst	SCONJ	IN	_	14	mark	_	_
+12	the	the	DET	DT	_	13	det	_	_
+13	camera	camera	NOUN	NN	_	14	nsubj	_	_
+14	closes	close	VERB	VBZ	_	6	advcl	_	_
+15	on	on	ADP	IN	_	16	case	_	_
+16	him	he	PRON	PRP	_	14	obl	_	_
+17	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 23
+1	Then	then	ADV	RB	_	5	advmod	_	_
+2	the	the	DET	DT	_	5	nsubj:pass	_	_
+3	covering	cover	VERB	VBG	_	2	amod	_	_
+4	is	be	AUX	VBZ	_	5	aux:pass	_	_
+5	removed	remove	VERB	VBN	_	0	root	_	_
+6	from	from	ADP	IN	_	8	case	_	_
+7	his	he	PRON	PRP$	_	8	nmod:poss	_	_
+8	face	face	NOUN	NN	_	5	obl	_	_
+9	which	which	PRON	WDT	_	10	nsubj	_	_
+10	has	have	VERB	VBZ	_	8	acl:relcl	_	_
+11	traces	trace	NOUN	NNS	_	10	obj	_	_
+12	of	of	ADP	IN	_	13	case	_	_
+13	blood	blood	NOUN	NN	_	11	nmod	_	_
+14	on	on	ADP	IN	_	15	case	_	_
+15	it	it	PRON	PRP	_	10	obl	_	_
+16	in	in	ADP	IN	_	17	case	_	_
+17	addition	addition	NOUN	NN	_	10	obl	_	_
+18	to	to	ADP	IN	_	21	case	_	_
+19	a	a	DET	DT	_	21	det	_	_
+20	deep	deep	ADJ	JJ	_	21	amod	_	_
+21	wound	wound	NOUN	NN	_	17	nmod	_	_
+22	on	on	ADP	IN	_	24	case	_	_
+23	his	he	PRON	PRP$	_	24	nmod:poss	_	_
+24	neck	neck	NOUN	NN	_	21	nmod	_	_
+25	.	.	PUNCT	.	_	5	punct	_	_
+
+# sent_id = 24
+1	The	the	DET	DT	_	2	det	_	_
+2	video	video	NOUN	NN	_	4	nsubj	_	_
+3	also	also	ADV	RB	_	4	advmod	_	_
+4	plays	play	VERB	VBZ	_	0	root	_	_
+5	voices	voice	NOUN	NNS	_	4	obj	_	_
+6	of	of	ADP	IN	_	7	case	_	_
+7	those	that	PRON	DT	_	5	nmod	_	_
+8	next	next	ADJ	JJ	_	7	amod	_	_
+9	to	to	ADP	IN	_	11	case	_	_
+10	the	the	DET	DT	_	11	det	_	_
+11	corpse	corpse	NOUN	NN	_	8	obl	_	_
+12	speaking	speak	VERB	VBG	_	5	acl	_	_
+13	to	to	ADP	IN	_	15	case	_	_
+14	each	each	DET	DT	_	15	det	_	_
+15	other	other	ADJ	JJ	_	12	obl	_	_
+16	.	.	PUNCT	.	_	4	punct	_	_
+
+# sent_id = 25
+1	One	one	NUM	CD	_	4	nsubj	_	_
+2	of	of	ADP	IN	_	3	case	_	_
+3	them	they	PRON	PRP	_	1	nmod	_	_
+4	says	say	VERB	VBZ	_	0	root	_	_
+5	"	"	PUNCT	``	_	6	punct	_	_
+6	quickly	quickly	ADV	RB	_	4	advmod	_	_
+7	"	"	PUNCT	''	_	6	punct	_	_
+8	apparently	apparently	ADV	RB	_	9	advmod	_	_
+9	asking	ask	VERB	VBG	_	4	xcomp	_	_
+10	the	the	DET	DT	_	11	det	_	_
+11	person	person	NOUN	NN	_	9	obj	_	_
+12	who	who	PRON	WP	_	14	nsubj	_	_
+13	is	be	AUX	VBZ	_	14	aux	_	_
+14	filming	film	VERB	VBG	_	11	acl:relcl	_	_
+15	to	to	PART	TO	_	16	mark	_	_
+16	do	do	VERB	VB	_	9	xcomp	_	_
+17	it	it	PRON	PRP	_	16	obj	_	_
+18	quickly	quickly	ADV	RB	_	16	advmod	_	_
+19	.	.	PUNCT	.	_	4	punct	_	_
+
+# sent_id = 26
+1	Someone	someone	PRON	NN	_	3	nsubj	_	_
+2	is	be	AUX	VBZ	_	3	aux	_	_
+3	calling	call	VERB	VBG	_	0	root	_	_
+4	to	to	ADP	IN	_	6	case	_	_
+5	another	another	DET	DT	_	6	det	_	_
+6	man	man	NOUN	NN	_	3	obl	_	_
+7	in	in	ADP	IN	_	10	case	_	_
+8	a	a	DET	DT	_	10	det	_	_
+9	loud	loud	ADJ	JJ	_	10	amod	_	_
+10	voice	voice	NOUN	NN	_	3	obl	_	_
+11	saying	say	VERB	VBG	_	3	advcl	_	_
+12	..	..	SYM	NFP	_	11	punct	_	_
+13	"	"	PUNCT	``	_	11	punct	_	_
+14	Abu	Abu	PROPN	NNP	_	15	compound	_	_
+15	Ali	Ali	PROPN	NNP	_	23	nsubj	_	_
+16	,	,	PUNCT	,	_	15	punct	_	_
+17	Abu	Abu	PROPN	NNP	_	18	compound	_	_
+18	Ali	Ali	PROPN	NNP	_	15	appos	_	_
+19	..	..	SYM	NFP	_	23	punct	_	_
+20	you	you	PRON	PRP	_	23	nsubj	_	_
+21	will	will	AUX	MD	_	23	aux	_	_
+22	be	be	AUX	VB	_	23	cop	_	_
+23	responsible	responsible	ADJ	JJ	_	11	ccomp	_	_
+24	"	"	PUNCT	``	_	27	punct	_	_
+25	for	for	ADP	IN	_	27	case	_	_
+26	the	the	DET	DT	_	27	det	_	_
+27	matter	matter	NOUN	NN	_	23	obl	_	_
+28	"	"	PUNCT	''	_	27	punct	_	_
+29	before	before	SCONJ	IN	_	35	mark	_	_
+30	the	the	DET	DT	_	31	det	_	_
+31	tone	tone	NOUN	NN	_	35	nsubj	_	_
+32	of	of	ADP	IN	_	34	case	_	_
+33	his	he	PRON	PRP$	_	34	nmod:poss	_	_
+34	voice	voice	NOUN	NN	_	31	nmod	_	_
+35	starts	start	VERB	VBZ	_	11	advcl	_	_
+36	to	to	PART	TO	_	37	mark	_	_
+37	rise	rise	VERB	VB	_	35	xcomp	_	_
+38	in	in	ADP	IN	_	40	case	_	_
+39	a	a	DET	DT	_	40	det	_	_
+40	way	way	NOUN	NN	_	37	obl	_	_
+41	suggesting	suggest	VERB	VBG	_	40	acl	_	_
+42	that	that	SCONJ	IN	_	46	mark	_	_
+43	he	he	PRON	PRP	_	46	nsubj	_	_
+44	is	be	AUX	VBZ	_	46	cop	_	_
+45	under	under	ADP	IN	_	46	case	_	_
+46	pressure	pressure	NOUN	NN	_	41	ccomp	_	_
+47	because	because	SCONJ	IN	_	51	mark	_	_
+48	the	the	DET	DT	_	49	det	_	_
+49	filming	filming	NOUN	NN	_	51	nsubj	_	_
+50	is	be	AUX	VBZ	_	51	aux	_	_
+51	taking	take	VERB	VBG	_	46	advcl	_	_
+52	too	too	ADV	RB	_	53	advmod	_	_
+53	long	long	ADV	RB	_	51	advmod	_	_
+54	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 27
+1	The	the	DET	DT	_	2	det	_	_
+2	clip	clip	NOUN	NN	_	5	nsubj	_	_
+3	does	do	AUX	VBZ	_	5	aux	_	_
+4	not	not	PART	RB	_	5	advmod	_	_
+5	last	last	VERB	VB	_	0	root	_	_
+6	longer	long	ADV	RBR	_	5	advmod	_	_
+7	than	than	ADP	IN	_	10	case	_	_
+8	half	half	DET	PDT	_	10	det:predet	_	_
+9	a	a	DET	DT	_	10	det	_	_
+10	minute	minute	NOUN	NN	_	6	obl	_	_
+11	and	and	CCONJ	CC	_	15	cc	_	_
+12	is	be	AUX	VBZ	_	15	cop	_	_
+13	the	the	DET	DT	_	15	det	_	_
+14	second	second	ADJ	JJ	_	15	amod	_	_
+15	one	one	NOUN	NN	_	5	conj	_	_
+16	being	be	AUX	VBG	_	17	aux:pass	_	_
+17	broadcast	broadcast	VERB	VBN	_	15	acl	_	_
+18	unofficially	unofficially	ADV	RB	_	17	advmod	_	_
+19	on	on	ADP	IN	_	21	case	_	_
+20	the	the	DET	DT	_	21	det	_	_
+21	Internet	internet	NOUN	NN	_	17	obl	_	_
+22	following	follow	VERB	VBG	_	17	xcomp	_	_
+23	the	the	DET	DT	_	24	det	_	_
+24	film	film	NOUN	NN	_	22	obj	_	_
+25	taken	take	VERB	VBN	_	24	acl	_	_
+26	on	on	ADP	IN	_	29	case	_	_
+27	a	a	DET	DT	_	29	det	_	_
+28	mobile	mobile	ADJ	JJ	_	29	amod	_	_
+29	phone	phone	NOUN	NN	_	25	obl	_	_
+30	last	last	ADJ	JJ	_	31	amod	_	_
+31	week	week	NOUN	NN	_	25	obl:tmod	_	_
+32	which	which	PRON	WDT	_	33	nsubj	_	_
+33	recorded	record	VERB	VBD	_	24	acl:relcl	_	_
+34	the	the	DET	DT	_	35	det	_	_
+35	execution	execution	NOUN	NN	_	33	obj	_	_
+36	of	of	ADP	IN	_	37	case	_	_
+37	Saddam	Saddam	PROPN	NNP	_	35	nmod	_	_
+38	and	and	CCONJ	CC	_	35	cc	_	_
+39	depicted	depict	VERB	VBD	_	35	acl	_	_
+40	insults	insult	NOUN	NNS	_	39	obj	_	_
+41	and	and	CCONJ	CC	_	44	cc	_	_
+42	repeated	repeat	VERB	VBN	_	44	amod	_	_
+43	Shiite	Shiite	ADJ	JJ	_	44	amod	_	_
+44	slogans	slogan	NOUN	NNS	_	40	conj	_	_
+45	by	by	ADP	IN	_	46	case	_	_
+46	those	that	PRON	DT	_	40	nmod	_	_
+47	who	who	PRON	WP	_	48	nsubj	_	_
+48	attended	attend	VERB	VBD	_	46	acl:relcl	_	_
+49	his	he	PRON	PRP$	_	50	nmod:poss	_	_
+50	execution	execution	NOUN	NN	_	48	obj	_	_
+51	.	.	PUNCT	.	_	5	punct	_	_
+
+# sent_id = 28
+1	The	the	DET	DT	_	3	det	_	_
+2	film	film	NOUN	NN	_	3	compound	_	_
+3	link	link	NOUN	NN	_	0	root	_	_
+4	--	--	PUNCT	:	_	3	punct	_	_
+5	http://www.liveleak.com/view?i=c5daa5b733	http://www.liveleak.com/view?i=c5daa5b733	X	ADD	_	3	dep	_	_
+
+# sent_id = 29
+1	For	for	ADP	IN	_	2	case	_	_
+2	correspondence	correspondence	NOUN	NN	_	0	root	_	_
+3	:	:	PUNCT	:	_	2	punct	_	_
+4	--	--	PUNCT	.	_	2	punct	_	_
+
+# sent_id = 30
+1	alisau@gmail.com	alisau@gmail.com	NOUN	NN	_	0	root	_	_
+
+# sent_id = 31
+1	Ibn	Ibn	PROPN	NNP	_	4	compound	_	_
+2	al	al	PROPN	NNP	_	4	compound	_	_
+3	-	-	PUNCT	HYPH	_	4	punct	_	_
+4	Faqeer	Faqeer	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 32
+1	Why	why	ADV	WRB	_	5	advmod	_	_
+2	did	do	AUX	VBD	_	5	aux	_	_
+3	n't	not	PART	RB	_	5	advmod	_	_
+4	this	this	PRON	DT	_	5	nsubj	_	_
+5	appear	appear	VERB	VB	_	0	root	_	_
+6	in	in	ADP	IN	_	8	case	_	_
+7	the	the	DET	DT	_	8	det	_	_
+8	media	media	NOUN	NNS	_	5	obl	_	_
+9	--	--	PUNCT	.	_	5	punct	_	_
+
+# sent_id = 33
+1	Tonight	tonight	NOUN	NN	_	4	obl:tmod	_	_
+2	I	I	PRON	PRP	_	4	nsubj	_	_
+3	'll	will	AUX	MD	_	4	aux	_	_
+4	list	list	VERB	VB	_	0	root	_	_
+5	the	the	DET	DT	_	7	det	_	_
+6	two	two	NUM	CD	_	7	nummod	_	_
+7	films	film	NOUN	NNS	_	4	obj	_	_
+8	of	of	ADP	IN	_	11	case	_	_
+9	the	the	DET	DT	_	11	det	_	_
+10	Rafid	Rafid	PROPN	NNP	_	11	compound	_	_
+11	dervish	dervish	NOUN	NN	_	7	nmod	_	_
+12	,	,	PUNCT	,	_	11	punct	_	_
+13	Moqtada	Moqtada	PROPN	NNP	_	11	appos	_	_
+14	,	,	PUNCT	,	_	4	punct	_	_
+15	for	for	SCONJ	IN	_	18	mark	_	_
+16	everyone	everyone	PRON	NN	_	18	nsubj	_	_
+17	to	to	PART	TO	_	18	mark	_	_
+18	get	get	VERB	VB	_	4	advcl	_	_
+19	to	to	PART	TO	_	20	mark	_	_
+20	know	know	VERB	VB	_	18	xcomp	_	_
+21	him	he	PRON	PRP	_	20	obj	_	_
+22	up	up	ADV	RB	_	23	advmod	_	_
+23	close	close	ADV	RB	_	20	advmod	_	_
+24	.	.	PUNCT	.	_	4	punct	_	_
+
+# sent_id = 34
+1	Thank	thank	VERB	VBP	_	0	root	_	_
+2	you	you	PRON	PRP	_	1	obj	_	_
+3	for	for	ADP	IN	_	5	case	_	_
+4	your	you	PRON	PRP$	_	5	nmod:poss	_	_
+5	visit	visit	NOUN	NN	_	1	obl	_	_
+6	.	.	PUNCT	.	_	1	punct	_	_
+
+# sent_id = 35
+1	Here	here	ADV	RB	_	3	advmod	_	_
+2	we	we	PRON	PRP	_	3	nsubj	_	_
+3	are	be	VERB	VBP	_	0	root	_	_
+4	saying	say	VERB	VBG	_	3	xcomp	_	_
+5	good	good	INTJ	UH	_	4	discourse	_	_
+6	-	-	PUNCT	HYPH	_	5	punct	_	_
+7	bye	bye	INTJ	UH	_	5	dep	_	_
+8	to	to	ADP	IN	_	10	case	_	_
+9	another	another	DET	DT	_	10	det	_	_
+10	year	year	NOUN	NN	_	4	obl	_	_
+11	...	...	SYM	NFP	_	3	punct	_	_
+12	what	what	PRON	WP	_	14	det	_	_
+13	a	a	DET	DT	_	14	det	_	_
+14	pity	pity	NOUN	NN	_	18	dep	_	_
+15	we	we	PRON	PRP	_	18	nsubj	_	_
+16	have	have	AUX	VBP	_	18	aux	_	_
+17	been	be	AUX	VBN	_	18	cop	_	_
+18	negligent	negligent	ADJ	JJ	_	3	parataxis	_	_
+19	in	in	ADP	IN	_	20	case	_	_
+20	it	it	PRON	PRP	_	18	obl	_	_
+21	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 36
+1	Ibn	Ibn	PROPN	NNP	_	4	compound	_	_
+2	al	al	PROPN	NNP	_	4	compound	_	_
+3	-	-	PUNCT	HYPH	_	4	punct	_	_
+4	Faqeer	Faqeer	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 37
+1	Thanks	thanks	NOUN	NNS	_	4	nsubj	_	_
+2	be	be	AUX	VB	_	4	cop	_	_
+3	to	to	ADP	IN	_	4	case	_	_
+4	God	God	PROPN	NNP	_	0	root	_	_
+5	alone	alone	ADJ	JJ	_	4	amod	_	_
+6	,	,	PUNCT	,	_	4	punct	_	_
+7	Yasmine	Yasmine	PROPN	NNP	_	4	dep	_	_
+8	,	,	PUNCT	,	_	4	punct	_	_
+9	that	that	SCONJ	IN	_	11	mark	_	_
+10	He	he	PRON	PRP	_	11	nsubj	_	_
+11	made	make	VERB	VBD	_	4	ccomp	_	_
+12	easy	easy	ADJ	JJ	_	11	xcomp	_	_
+13	the	the	DET	DT	_	14	det	_	_
+14	circulation	circulation	NOUN	NN	_	12	dep	_	_
+15	of	of	ADP	IN	_	17	case	_	_
+16	such	such	ADJ	JJ	_	17	amod	_	_
+17	evidence	evidence	NOUN	NN	_	14	nmod	_	_
+18	which	which	PRON	WDT	_	19	nsubj	_	_
+19	shows	show	VERB	VBZ	_	17	acl:relcl	_	_
+20	the	the	DET	DT	_	21	det	_	_
+21	hate	hate	NOUN	NN	_	19	obj	_	_
+22	of	of	ADP	IN	_	24	case	_	_
+23	the	the	DET	DT	_	24	det	_	_
+24	Safawiya	Safawiya	PROPN	NNP	_	21	nmod	_	_
+25	...	...	SYM	NFP	_	21	punct	_	_
+26	and	and	CCONJ	CC	_	29	cc	_	_
+27	who	who	PRON	WP	_	29	nsubj	_	_
+28	will	will	AUX	MD	_	29	aux	_	_
+29	follow	follow	VERB	VB	_	21	conj	_	_
+30	the	the	DET	DT	_	31	det	_	_
+31	fate	fate	NOUN	NN	_	29	obj	_	_
+32	of	of	ADP	IN	_	35	case	_	_
+33	their	they	PRON	PRP$	_	35	nmod:poss	_	_
+34	first	first	ADJ	JJ	_	35	amod	_	_
+35	grandfather	grandfather	NOUN	NN	_	31	nmod	_	_
+36	,	,	PUNCT	,	_	29	punct	_	_
+37	God	God	PROPN	NNP	_	38	nsubj	_	_
+38	permitting	permit	VERB	VBG	_	29	advcl	_	_
+39	.	.	PUNCT	.	_	4	punct	_	_
+
+# sent_id = 38
+1	May	may	AUX	MD	_	3	aux	_	_
+2	God	God	PROPN	NNP	_	3	nsubj	_	_
+3	answer	answer	VERB	VB	_	0	root	_	_
+4	your	you	PRON	PRP$	_	5	nmod:poss	_	_
+5	prayer	prayer	NOUN	NN	_	3	obj	_	_
+6	in	in	ADP	IN	_	10	case	_	_
+7	the	the	DET	DT	_	10	det	_	_
+8	very	very	ADV	RB	_	9	advmod	_	_
+9	near	near	ADJ	JJ	_	10	amod	_	_
+10	future	future	NOUN	NN	_	3	obl	_	_
+11	,	,	PUNCT	,	_	3	punct	_	_
+12	God	God	PROPN	NNP	_	13	nsubj	_	_
+13	willing	willing	ADJ	JJ	_	3	xcomp	_	_
+14	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 39
+1	Thank	thank	VERB	VBP	_	0	root	_	_
+2	you	you	PRON	PRP	_	1	obj	_	_
+3	for	for	ADP	IN	_	5	case	_	_
+4	your	you	PRON	PRP$	_	5	nmod:poss	_	_
+5	visit	visit	NOUN	NN	_	1	obl	_	_
+6	and	and	CCONJ	CC	_	8	cc	_	_
+7	your	you	PRON	PRP$	_	8	nmod:poss	_	_
+8	comment	comment	NOUN	NN	_	5	conj	_	_
+9	.	.	PUNCT	.	_	1	punct	_	_
+
+# sent_id = 40
+1	Here	here	ADV	RB	_	3	advmod	_	_
+2	we	we	PRON	PRP	_	3	nsubj	_	_
+3	are	be	VERB	VBP	_	0	root	_	_
+4	,	,	PUNCT	,	_	3	punct	_	_
+5	saying	say	VERB	VBG	_	3	xcomp	_	_
+6	good	good	INTJ	UH	_	5	discourse	_	_
+7	-	-	PUNCT	HYPH	_	6	punct	_	_
+8	bye	bye	INTJ	UH	_	6	dep	_	_
+9	to	to	ADP	IN	_	11	case	_	_
+10	another	another	DET	DT	_	11	det	_	_
+11	year	year	NOUN	NN	_	5	obl	_	_
+12	...	...	SYM	NFP	_	3	punct	_	_
+13	it	it	PRON	PRP	_	16	nsubj	_	_
+14	is	be	AUX	VBZ	_	16	cop	_	_
+15	a	a	DET	DT	_	16	det	_	_
+16	pity	pity	NOUN	NN	_	3	parataxis	_	_
+17	we	we	PRON	PRP	_	20	nsubj	_	_
+18	have	have	AUX	VBP	_	20	aux	_	_
+19	been	be	AUX	VBN	_	20	cop	_	_
+20	negligent	negligent	ADJ	JJ	_	16	dep	_	_
+21	in	in	ADP	IN	_	22	case	_	_
+22	it	it	PRON	PRP	_	20	obl	_	_
+23	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 41
+1	Ibn	Ibn	PROPN	NNP	_	4	compound	_	_
+2	al	al	PROPN	NNP	_	4	compound	_	_
+3	-	-	PUNCT	HYPH	_	4	punct	_	_
+4	Faqeer	Faqeer	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 42
+1	May	may	AUX	MD	_	3	aux	_	_
+2	God	God	PROPN	NNP	_	3	nsubj	_	_
+3	hear	hear	VERB	VB	_	0	root	_	_
+4	you	you	PRON	PRP	_	3	obj	_	_
+5	,	,	PUNCT	,	_	3	punct	_	_
+6	brother	brother	NOUN	NN	_	7	compound	_	_
+7	gwardyola	gwardyola	PROPN	NNP	_	3	obj	_	_
+8	..	..	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 43
+1	And	and	CCONJ	CC	_	15	cc	_	_
+2	the	the	DET	DT	_	4	det	_	_
+3	large	large	ADJ	JJ	_	4	amod	_	_
+4	army	army	NOUN	NN	_	15	nsubj:pass	_	_
+5	of	of	ADP	IN	_	6	case	_	_
+6	infidels	infidel	NOUN	NNS	_	4	nmod	_	_
+7	,	,	PUNCT	,	_	15	punct	_	_
+8	by	by	ADP	IN	_	11	case	_	_
+9	God	God	PROPN	NNP	_	11	nmod:poss	_	_
+10	's	's	PART	POS	_	9	case	_	_
+11	leave	leave	NOUN	NN	_	15	obl	_	_
+12	,	,	PUNCT	,	_	15	punct	_	_
+13	will	will	AUX	MD	_	15	aux	_	_
+14	be	be	AUX	VB	_	15	aux:pass	_	_
+15	butchered	butcher	VERB	VBN	_	0	root	_	_
+16	on	on	ADP	IN	_	18	case	_	_
+17	the	the	DET	DT	_	18	det	_	_
+18	banks	bank	NOUN	NNS	_	15	obl	_	_
+19	of	of	ADP	IN	_	21	case	_	_
+20	the	the	DET	DT	_	21	det	_	_
+21	Tigris	Tigris	PROPN	NNP	_	18	nmod	_	_
+22	and	and	CCONJ	CC	_	25	cc	_	_
+23	in	in	ADP	IN	_	25	case	_	_
+24	Victorious	victorious	ADJ	JJ	_	25	amod	_	_
+25	Baghdad	Baghdad	PROPN	NNP	_	18	conj	_	_
+26	.	.	PUNCT	.	_	15	punct	_	_
+
+# sent_id = 44
+1	Thank	thank	VERB	VBP	_	0	root	_	_
+2	you	you	PRON	PRP	_	1	obj	_	_
+3	for	for	SCONJ	IN	_	4	mark	_	_
+4	visiting	visit	VERB	VBG	_	1	advcl	_	_
+5	.	.	PUNCT	.	_	1	punct	_	_
+
+# sent_id = 45
+1	Here	here	ADV	RB	_	3	advmod	_	_
+2	we	we	PRON	PRP	_	3	nsubj	_	_
+3	are	be	VERB	VBP	_	0	root	_	_
+4	saying	say	VERB	VBG	_	3	xcomp	_	_
+5	good	good	INTJ	UH	_	4	discourse	_	_
+6	-	-	PUNCT	HYPH	_	5	punct	_	_
+7	bye	bye	INTJ	UH	_	5	dep	_	_
+8	to	to	ADP	IN	_	10	case	_	_
+9	another	another	DET	DT	_	10	det	_	_
+10	year	year	NOUN	NN	_	4	obl	_	_
+11	...	...	SYM	NFP	_	3	punct	_	_
+12	it	it	PRON	PRP	_	15	nsubj	_	_
+13	is	be	AUX	VBZ	_	15	cop	_	_
+14	a	a	DET	DT	_	15	det	_	_
+15	pity	pity	NOUN	NN	_	3	parataxis	_	_
+16	we	we	PRON	PRP	_	19	nsubj	_	_
+17	have	have	AUX	VBP	_	19	aux	_	_
+18	been	be	AUX	VBN	_	19	cop	_	_
+19	negligent	negligent	ADJ	JJ	_	15	dep	_	_
+20	in	in	ADP	IN	_	21	case	_	_
+21	it	it	PRON	PRP	_	19	obl	_	_
+22	.	.	PUNCT	.	_	3	punct	_	_
+
+# sent_id = 46
+1	Zamzam	Zamzam	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 47
+1	Please	please	INTJ	UH	_	2	discourse	_	_
+2	stop	stop	VERB	VB	_	0	root	_	_
+3	!	!	SYM	NFP	_	2	punct	_	_
+4	.	.	PUNCT	.	_	2	punct	_	_
+
+# sent_id = 48
+1	We	we	PRON	PRP	_	6	nsubj	_	_
+2	are	be	AUX	VBP	_	6	cop	_	_
+3	all	all	DET	DT	_	6	dep	_	_
+4	against	against	ADP	IN	_	6	case	_	_
+5	the	the	DET	DT	_	6	det	_	_
+6	way	way	NOUN	NN	_	0	root	_	_
+7	he	he	PRON	PRP	_	9	nsubj:pass	_	_
+8	was	be	AUX	VBD	_	9	aux:pass	_	_
+9	killed	kill	VERB	VBN	_	6	acl:relcl	_	_
+10	and	and	CCONJ	CC	_	13	cc	_	_
+11	against	against	ADP	IN	_	13	case	_	_
+12	the	the	DET	DT	_	13	det	_	_
+13	Safawites	Safawites	PROPN	NNPS	_	6	conj	_	_
+14	but	but	CCONJ	CC	_	16	cc	_	_
+15	enough	enough	ADJ	JJ	_	16	amod	_	_
+16	bullcraping	bullcraping	NOUN	NN	_	6	conj	_	_
+17	that	that	SCONJ	IN	_	21	mark	_	_
+18	he	he	PRON	PRP	_	21	nsubj	_	_
+19	is	be	AUX	VBZ	_	21	cop	_	_
+20	the	the	DET	DT	_	21	det	_	_
+21	sheikh	sheikh	NOUN	NN	_	16	ccomp	_	_
+22	of	of	ADP	IN	_	26	case	_	_
+23	the	the	DET	DT	_	26	det	_	_
+24	God	God	PROPN	NNP	_	25	dep	_	_
+25	fearing	fear	VERB	VBG	_	26	amod	_	_
+26	ones	one	NOUN	NNS	_	21	nmod	_	_
+27	..	..	PUNCT	.	_	6	punct	_	_
+
+# sent_id = 49
+1	Click	click	VERB	VB	_	0	root	_	_
+2	on	on	ADP	IN	_	4	case	_	_
+3	this	this	DET	DT	_	4	det	_	_
+4	link	link	NOUN	NN	_	1	obl	_	_
+5	..	..	PUNCT	.	_	1	punct	_	_
+
+# sent_id = 50
+1	And	and	CCONJ	CC	_	2	cc	_	_
+2	watch	watch	VERB	VB	_	0	root	_	_
+3	films	film	NOUN	NNS	_	2	obj	_	_
+4	your	you	PRON	PRP$	_	5	nmod:poss	_	_
+5	Sheikh	Sheikh	PROPN	NNP	_	6	nsubj	_	_
+6	produced	produce	VERB	VBD	_	3	acl:relcl	_	_
+7	!	!	PUNCT	.	_	2	punct	_	_
+
+# sent_id = 51
+1	http://www.pukmedia.com/arabicnews/6-1/news33.htm	http://www.pukmedia.com/arabicnews/6-1/news33.htm	X	ADD	_	0	root	_	_
+
+# sent_id = 52
+1	Faiz	Faiz	PROPN	NNP	_	4	compound	_	_
+2	al	al	PROPN	NNP	_	4	compound	_	_
+3	-	-	PUNCT	HYPH	_	4	punct	_	_
+4	Arabi	Arabi	PROPN	NNP	_	0	root	_	_
+
+# sent_id = 53
+1	Thank	thank	VERB	VBP	_	0	root	_	_
+2	you	you	PRON	PRP	_	1	obj	_	_
+3	for	for	ADP	IN	_	5	case	_	_
+4	the	the	DET	DT	_	5	det	_	_
+5	site	site	NOUN	NN	_	1	obl	_	_
+6	,	,	PUNCT	,	_	1	punct	_	_
+7	my	my	PRON	PRP$	_	8	nmod:poss	_	_
+8	brother	brother	NOUN	NN	_	1	obj	_	_
+9	Zamzam	Zamzam	PROPN	NNP	_	8	appos	_	_
+10	,,	,,	SYM	NFP	_	1	punct	_	_
+11	thanks	thanks	NOUN	NNS	_	14	nsubj	_	_
+12	be	be	AUX	VB	_	14	cop	_	_
+13	to	to	ADP	IN	_	14	case	_	_
+14	God	God	PROPN	NNP	_	1	parataxis	_	_
+15	who	who	PRON	WP	_	16	nsubj	_	_
+16	destroyed	destroy	VERB	VBD	_	14	acl:relcl	_	_
+17	the	the	DET	DT	_	18	det	_	_
+18	oppressors	oppressor	NOUN	NNS	_	16	obj	_	_
+19	by	by	ADP	IN	_	21	case	_	_
+20	the	the	DET	DT	_	21	det	_	_
+21	oppressors	oppressor	NOUN	NNS	_	16	obl	_	_
+22	.	.	PUNCT	.	_	1	punct	_	_
+
+# sent_id = 54
+1	This	this	PRON	DT	_	5	nsubj	_	_
+2	is	be	AUX	VBZ	_	5	cop	_	_
+3	my	my	PRON	PRP$	_	5	nmod:poss	_	_
+4	personal	personal	ADJ	JJ	_	5	amod	_	_
+5	opinion	opinion	NOUN	NN	_	0	root	_	_
+6	and	and	CCONJ	CC	_	9	cc	_	_
+7	is	be	AUX	VBZ	_	9	cop	_	_
+8	not	not	PART	RB	_	9	advmod	_	_
+9	binding	binding	ADJ	JJ	_	5	conj	_	_
+10	on	on	ADP	IN	_	11	case	_	_
+11	anyone	anyone	PRON	NN	_	9	obl	_	_
+12	.	.	PUNCT	.	_	5	punct	_	_
+
