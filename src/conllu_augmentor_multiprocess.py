@@ -1,31 +1,11 @@
-# augments the conllu dataset; for purpose of training POS tagger and dependency parser
-# the error injection is only changing the POS tags of the words (and also obviously the word itself) because we want
-# to ensure that the dependency parser can recognize the correct dependencies even if the POS tags are wrong
-# ERRORS WE NEED TO SIMULATE:
-#   - noun + gerund: if gerund is 'nsubj' of noun, change gerund to base form verb
-#       - in auxiliary + base form verb, model sometimes thinks the base form verb is a noun
-#   - adp + gerund: if gerund is 'pcomp' of preposition, change gerund to base form verb 
-#       - in adp + base form verb, model thinks the base form verb is a noun
-#   - adjective: for each adjective, change to adverb (and vice versa)
-#       - model sometimes thinks misplaced adjectives are adverbs and vice versa
-#       - suggestion: if adjective is 'advmod' of verb, suggest change to adverb (bc this is incorrect placement of adjective) and etc
-# ERRORS WE DON'T NEED TO SIMULATE:
-#   - subject verb agreement: model already diffentiates between singular and plural nouns even if ungrammatical sentence
-#       - suggest a different form of the verb before the noun
-#   - auxiliary verbs: model already can handle wrong form of aux verbs like 'be' and 'have'
-#       - suggest a different form of auxiliary verb based on context
-#   - gerund vs past tense: model already can differentiate between gerund and past tense verbs
-#       - suggest adding a preposition before the gerund OR making the gerund a past tense verb
 from word_forms.word_forms import get_word_forms
 import spacy
 import copy
 import random
 import os
-import concurrent.futures as cf
-from threading import Thread
-from threading import Lock
 import time
 import traceback
+import concurrent.futures as cf
 
 # note that word_forms library had to be modified to ensure thread safety of wordnet
 # see get_related_lemmas_rec() in word_forms/word_forms.py
@@ -98,15 +78,16 @@ class ConlluAugmentor:
             for index, word in enumerate(aug_sentence):
                 # word matches dependency relation, child pos, and head pos
                 if word[7] == dep_rel and word[3] in child_pos_list and sentence[int(word[6])-1][3] in head_pos_list and random.uniform(0, 1) < probability: 
-                        # update tag of child if child is True and child tag is in old_tag_list
+                        # update tag of child
                         if child and sentence[index][4] in old_tag_list:
                             new_form = self.get_forms(word[2], aug_tag, nlp, get_word_forms)
                             if new_form:
                                 aug_sentence[index][4] = aug_tag
                                 aug_sentence[index][1] = new_form
                             else:
+                                print(f"Could not find form for child {word[2]} with tag {aug_tag}")
                                 return []    # no augmentation possible
-                        # update tag of head if child is False and head exists and head tag is in old_tag_list
+                        # update tag of head
                         elif int(word[6]) > 0 and sentence[int(word[6])-1][4] in old_tag_list:
                             head_index = int(word[6]) - 1    # because head is 1-indexed
                             new_form = self.get_forms(sentence[head_index][2], aug_tag, nlp, get_word_forms)
@@ -114,6 +95,7 @@ class ConlluAugmentor:
                                 aug_sentence[head_index][4] = aug_tag 
                                 aug_sentence[head_index][1] = new_form
                             else:
+                                print(f"Could not find form for head {sentence[head_index][2]} with tag {aug_tag}")
                                 return []    # no augmentation possible
                         else:
                             continue    
@@ -125,7 +107,7 @@ class ConlluAugmentor:
     # for given .conllu file, find a specific dependency relation and specific POS tag to augment and whether to use head or child
     # create a new .conllu file with the augmented data and append the augmented data to original .conllu file (make sure we update sentence id)
     # augments on a file-by-file basis, so we can run this on a deep traversal of the data directory
-    def augment_conllu_file(self, conllu_path: str, out_file: str, lock: Lock, nlp, get_word_forms):
+    def augment_conllu_file(self, conllu_path: str, file, nlp, get_word_forms):
         if self.rules is None:
             raise ValueError('No rules specified for augmentation, aborting...')
 
@@ -135,35 +117,25 @@ class ConlluAugmentor:
         for sentence in formatted_data:
             aug_sentence = self.augment_sentence(sentence, nlp, get_word_forms)
             if aug_sentence != []:
-                with lock:
-                    with open(out_file, 'a') as file:
-                        file.write(f'{aug_sentence}\n')
+                file.write(f'{aug_sentence}\n')
 
+    # run augmentation concurrently on a batch of files
     def run_batch(self, args: tuple[int, list[str]], nlp, get_word_forms):
         number, files = args
         print(f"Running batch {number}")
-        # create the shared lock
-        lock = Lock()
         
-        # should be out_dir = self.data_dir + '/augmented' but temporary using out_dir = 'sample_data/augmented'
         out_dir = 'sample_data/augmented'
-        out_file = f'{out_dir}/tr_aug_{number}.conllu'
-        threads = [Thread(target=self.augment_conllu_file, args=(file,out_file,lock,nlp,get_word_forms)) for file in files]
+        out_file = open(f'{out_dir}/tr_aug_{number}.conllu', 'a')
 
-        # start threads
-        for thread in threads:
-            thread.start()
-        start_time = time.time()
-        # wait for threads to finish
-        for thread in threads:
-            thread.join()
-        end_time = time.time()
+        for file in files:
+            self.augment_conllu_file(file, out_file, nlp, get_word_forms)
+        
+        out_file.close()
+        
+        print(f"Batch {number} finished and written to {out_dir}/tr_aug_{number}.conllu")
 
-        print(f"Batch {number} finished in {end_time-start_time} seconds")
-
-    # multi-processing version of ConlluAugmentor
-    # batch_size: number of files to process in parallel
-    def run(self, batch_size: int=20):
+    # group files into batches by thread count and run augmentation on each batch in parallel
+    def run(self, num_processes: int=4, batch_size: int=10):
         try:
             start = time.time()
             batches = []
@@ -184,14 +156,17 @@ class ConlluAugmentor:
                         batch = []
 
                 if len(batch) != 0: 
-                    batches.append((counter, batch)) # last batch
+                    batches.append((counter, batch))
 
             end = time.time()
             print(f"Batching Finished in {end-start} seconds")
 
             start = time.time()
 
-            with cf.ProcessPoolExecutor() as executor:
+            out_dir = self.data_dir + '/augmented'
+            os.makedirs(out_dir, exist_ok=True)
+
+            with cf.ProcessPoolExecutor(max_workers=num_processes) as executor:
                 executor.map(self.run_batch, batches, [self.nlp]*len(batches), [get_word_forms]*len(batches))
             
             end = time.time()
@@ -210,8 +185,7 @@ def main():
     rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 1.0)]
     ca = ConlluAugmentor(data_dir, rules=rules)
     start = time.time()
-    # note: in run_batch() i put a sample data directory so please just be mindful isaac or pranshu
-    ca.run(batch_size=120)
+    ca.run(6, 100)
     end = time.time()
     print(f"finished in {end-start} seconds")
 
