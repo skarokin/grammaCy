@@ -50,9 +50,10 @@ class ConlluAugmentor:
             for w in forms[p]:
                 curr = nlp(w)[0]
                 if curr.tag_ == tag:
-                    print('found form:', curr.text)
+                    print(f'Found {tag} form for {word}: {curr.text}')
                     return curr.text
-        print('could not find form for', word, tag)
+        
+        print(f'Could not find {tag} form for {word}')
         return None
             
     # format string of conllu data into a list of sentences, where each sentence is a list of words with all features
@@ -70,6 +71,12 @@ class ConlluAugmentor:
         
         return splitted_data
     
+    # reverses the sentence back to CoNLL-U format, assigning a new sent_id
+    @staticmethod
+    def reverse_format_data(sentence: list[list[str]], sent_id: int) -> str:
+        lines = ['\t'.join(word) for word in sentence]
+        return f'# sent_id = {sent_id}\n' + '\n'.join(lines) + '\n\n'
+
     # add a rule to list of rules
     def add_rule(self, rule: tuple[any]):
         # if dep_rel, pos, aug_tag already exists, this is a duplicate rule
@@ -88,7 +95,8 @@ class ConlluAugmentor:
         
         return self.format_data(data)
 
-    # returns augmented sentence
+    # augments a sentence with the first random rule that matches the sentence
+    # if no rule matches, return empty list. else, return the augmented sentence
     def augment_sentence(self, sentence: list[str], nlp, get_word_forms) -> list[str]:
         shuffled_rules = random.sample(self.rules, len(self.rules))
         aug_sentence = copy.deepcopy(sentence)
@@ -122,8 +130,8 @@ class ConlluAugmentor:
         # no rules matched for this sentence 
         return []
 
-    # for given .conllu file, find a specific dependency relation and specific POS tag to augment and whether to use head or child
-    # create a new .conllu file with the augmented data and append the augmented data to original .conllu file (make sure we update sentence id)
+    # for given .conllu file, try to augment each sentence with a random rule 
+    # creates a new .conllu file with the augmented data and append the augmented data to that .conllu file
     # augments on a file-by-file basis, so we can run this on a deep traversal of the data directory
     def augment_conllu_file(self, conllu_path: str, out_file: str, lock: Lock, nlp, get_word_forms):
         if self.rules is None:
@@ -132,23 +140,27 @@ class ConlluAugmentor:
         formatted_data = self.open_conllu_file(conllu_path)
         print(f'Augmenting {conllu_path}...')
 
+        # augment each sentence in the file then output to a new file 
+        # lock ensures that only one thread writes to the file at a time
+        # all files in the same batch will write augmentations to the same file 
+        sent_id_count = 0
         for sentence in formatted_data:
             aug_sentence = self.augment_sentence(sentence, nlp, get_word_forms)
             if aug_sentence != []:
                 with lock:
                     with open(out_file, 'a') as file:
-                        file.write(f'{aug_sentence}\n')
+                        file.write(f'{self.reverse_format_data(aug_sentence, sent_id_count)}')
+                        sent_id_count += 1
 
-    def run_batch(self, args: tuple[int, list[str]], nlp, get_word_forms):
-        number, files = args
+    def run_batch(self, batch_info: tuple[int, list[tuple[str, str]]], nlp, get_word_forms):
+        number, file_tuples = batch_info
         print(f"Running batch {number}")
-        # create the shared lock
         lock = Lock()
-        
-        # should be out_dir = self.data_dir + '/augmented' but temporary using out_dir = 'sample_data/augmented'
-        out_dir = 'sample_data/augmented'
-        out_file = f'{out_dir}/tr_aug_{number}.conllu'
-        threads = [Thread(target=self.augment_conllu_file, args=(file,out_file,lock,nlp,get_word_forms)) for file in files]
+        threads = []
+
+        out_file = f'{file_tuples[0][0]}/batch_{number}_aug.conllu'
+
+        threads = [Thread(target=self.augment_conllu_file, args=(file_tuple[1], out_file, lock, nlp, get_word_forms)) for file_tuple in file_tuples]
 
         # start threads
         for thread in threads:
@@ -169,13 +181,14 @@ class ConlluAugmentor:
             batches = []
             counter = 0
             for root, _, filenames in os.walk(self.data_dir):
+                # ensure that batches stay within the same directory
                 batch = []
                 
                 for filename in filenames:
-                    if filename.startswith('tr_aug') or not filename.endswith('conllu'): 
+                    if filename.endswith('_aug.conllu') or not filename.endswith('conllu'): 
                         continue
 
-                    f = os.path.join(root, filename)
+                    f = (root, os.path.join(root, filename))
                     batch.append(f)
 
                     if len(batch) == batch_size:
@@ -183,11 +196,12 @@ class ConlluAugmentor:
                         counter += 1
                         batch = []
 
+                # add remaining files to last batch
                 if len(batch) != 0: 
-                    batches.append((counter, batch)) # last batch
+                    batches.append((counter, batch)) 
 
             end = time.time()
-            print(f"Batching Finished in {end-start} seconds")
+            print(f"Batching finished in {end-start} seconds")
 
             start = time.time()
 
@@ -196,7 +210,7 @@ class ConlluAugmentor:
             
             end = time.time()
 
-            print(f"Execution Finished in {end-start} seconds")
+            print(f"Execution finished in {end-start} seconds")
         
         except Exception as e:
             print(f'Error augmenting dataset: {e}')
@@ -204,13 +218,13 @@ class ConlluAugmentor:
 
 # testing testing :3
 def main():
-    data_dir = 'data/raw/'
+    data_dir = 'sample_data/raw/'
     # dep_rel to look for, list of possible child POS, list of possible head POS, 
     # list of old tags to consider, new tag to change old tag to, whether to change child or head, probability of changing
-    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 1.0)]
+    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 1)]
     ca = ConlluAugmentor(data_dir, rules=rules)
     start = time.time()
-    # note: in run_batch() i put a sample data directory so please just be mindful isaac or pranshu
+
     ca.run(batch_size=120)
     end = time.time()
     print(f"finished in {end-start} seconds")
