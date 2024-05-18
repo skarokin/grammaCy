@@ -263,8 +263,8 @@ def main():
     data_dir = 'sample_data/raw/'
     # dep_rel to look for, list of possible child POS, list of possible head POS, 
     # list of old tags to consider, new tag to change old tag to, whether to change child or head, probability of changing
-    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0),
-             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 1)]
+    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0), # incorrect verb form
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 1)] # using adverbs as adjectives
     ca = ConlluAugmentor(data_dir, rules=rules)
     start = time.time()
     
