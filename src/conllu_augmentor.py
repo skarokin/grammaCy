@@ -16,6 +16,9 @@
 #       - suggest a different form of auxiliary verb based on context
 #   - gerund vs past tense: model already can differentiate between gerund and past tense verbs
 #       - suggest adding a preposition before the gerund OR making the gerund a past tense verb
+
+# note that word_forms library had to be modified to ensure thread safety of wordnet
+# see get_related_lemmas_rec() in word_forms/word_forms.py. my fork of this is https://github.com/skarokin/word_forms_threadsafe
 from word_forms.word_forms import get_word_forms
 import spacy
 import copy
@@ -27,8 +30,41 @@ from threading import Lock
 import time
 import traceback
 
-# note that word_forms library had to be modified to ensure thread safety of wordnet
-# see get_related_lemmas_rec() in word_forms/word_forms.py
+# mapping to automatically update POS if the new tag falls under a different POS category
+# Pranshu's idea; this is necessary for adjective <-> adverb and perhaps other augmentations if the user wants to add them
+# NOTE: ignores punctuations, symbols, and affixes
+# NOTE: this isn't a true 1-1 mapping because, e.g. all verbs can be 'AUX' or 'VERB' and 'RB' can be 'ADV' or 'PART' but we can ignore
+tag_to_pos = {
+    'JJ': 'ADJ',
+    'JJR': 'ADJ',
+    'JJS': 'ADJ',
+    'RB': 'ADV',
+    'RBR': 'ADV',
+    'RBS': 'ADV',
+    'WRB': 'ADV',
+    'IN': 'ADP',
+    'RP': 'ADP',
+    'VB': 'VERB',
+    'VBD': 'VERB',
+    'VBG': 'VERB',
+    'VBN': 'VERB',
+    'VBP': 'VERB',
+    'VBZ': 'VERB',
+    'MD': 'VERB',
+    'CC': 'CCONJ',
+    'DT': 'DET',
+    'PDT': 'DET',
+    'PRP$': 'DET',
+    'WDT': 'DET',
+    'WP$': 'DET',
+    'UH': 'INTJ',
+    'NN': 'NOUN',
+    'NNS': 'NOUN',
+    'POS': 'PART',
+    'TO': 'PART',
+    'NNP': 'PROPN',
+    'NNPS': 'PROPN',
+}
 
 class ConlluAugmentor:
     '''A class to augment a dataset of .conllu files by injecting errors into sentences of interest'''
@@ -49,11 +85,12 @@ class ConlluAugmentor:
         for p in forms:
             for w in forms[p]:
                 curr = nlp(w)[0]
-                if curr.tag_ == tag:
+                # must enforce word is not the same... eg 'fast' is both an adjective and an adverb
+                if curr.tag_ == tag and curr.text != word:
                     print(f'Found {tag} form for {word}: {curr.text}')
                     return curr.text
         
-        print(f'Could not find {tag} form for {word}')
+        print(f'Could not find {tag} form for: {word}')
         return None
             
     # format string of conllu data into a list of sentences, where each sentence is a list of words with all features
@@ -97,6 +134,7 @@ class ConlluAugmentor:
 
     # augments a sentence with the first random rule that matches the sentence
     # if no rule matches, return empty list. else, return the augmented sentence
+    # automatically updates POS if the new tag falls under a different POS category
     def augment_sentence(self, sentence: list[str], nlp, get_word_forms) -> list[str]:
         shuffled_rules = random.sample(self.rules, len(self.rules))
         aug_sentence = copy.deepcopy(sentence)
@@ -112,6 +150,7 @@ class ConlluAugmentor:
                             if new_form:
                                 aug_sentence[index][4] = aug_tag
                                 aug_sentence[index][1] = new_form
+                                aug_sentence[index][3] = tag_to_pos[aug_tag] # tag_to_pos is 1-1 (even though actual mapping isnt) so this is safe
                             else:
                                 return []    # no augmentation possible
                         # update tag of head if child is False and head exists and head tag is in old_tag_list
@@ -121,6 +160,7 @@ class ConlluAugmentor:
                             if new_form:
                                 aug_sentence[head_index][4] = aug_tag 
                                 aug_sentence[head_index][1] = new_form
+                                aug_sentence[head_index][3] = tag_to_pos[aug_tag]
                             else:
                                 return []    # no augmentation possible
                         else:
@@ -165,10 +205,12 @@ class ConlluAugmentor:
         # start threads
         for thread in threads:
             thread.start()
+        
         start_time = time.time()
-        # wait for threads to finish
+
         for thread in threads:
             thread.join()
+        
         end_time = time.time()
 
         print(f"Batch {number} finished in {end_time-start_time} seconds")
@@ -221,10 +263,11 @@ def main():
     data_dir = 'sample_data/raw/'
     # dep_rel to look for, list of possible child POS, list of possible head POS, 
     # list of old tags to consider, new tag to change old tag to, whether to change child or head, probability of changing
-    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 1)]
+    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0),
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 1)]
     ca = ConlluAugmentor(data_dir, rules=rules)
     start = time.time()
-
+    
     ca.run(batch_size=120)
     end = time.time()
     print(f"finished in {end-start} seconds")
