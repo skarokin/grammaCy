@@ -1,4 +1,4 @@
-﻿# depparse-grammar
+﻿# grammaCy
 A rule-based grammar checking library that leverages a dependency parser to address the problems of rule-based grammar checking. 
 
 Check out a fully-built English model [here]
