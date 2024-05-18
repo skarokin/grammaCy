@@ -17,6 +17,8 @@ sentences = [
     'Zuko is known for betraying his uncle.', 'Zuko is known for betray his uncle.',
     'That is for walking.', 'That is for walk.',
 ]
+
+
     
 
 displacy.serve(list(nlp(s) for s in sentences), style='dep')
