@@ -267,6 +267,7 @@ def main():
              ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 1), 
              ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 1),
              ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 1)]
+    
     ca = ConlluAugmentor(data_dir, rules=rules)
     start = time.time()
     
