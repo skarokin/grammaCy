@@ -17,7 +17,7 @@ class EnglishModel:
         self.input_text = self.nlp(input_text)
         self.rules = rules
     
-    def enforce_rules(self):
+    def enforce(self):
         for rule in self.rules:
             # if rule is a function, call it with the input text
             # else, if rule is simply using dep_rel, child, and parent, apply the rule
