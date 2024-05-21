@@ -1,5 +1,3 @@
-import spacy
-
 # NOTE: our API is containerized and kept alive with the spaCy pipeline and get_forms function already loaded in memory
 #       this ensures low latency by avoiding the overhead of loading the pipeline and get_forms function for each request
 #       thus the constructor requires the pipeline and get_forms function to be passed in as arguments
@@ -13,7 +11,7 @@ import spacy
 # - consistent verb tense
 # - subject-verb-object order check
 class EnglishModel:
-    def __init__(self, spacy_pipeline, get_forms, input_text, rules):
+    def __init__(self, nlp, get_forms, input_text, rules):
         '''
         spacy_pipeline: a spaCy pipeline
         get_forms: a function that takes a token and desired tag and returns the form of the token with that tag
@@ -22,7 +20,7 @@ class EnglishModel:
               [(dep_rel, child_tag_list, head_tag_list, correct_tag_list, enforce_child_or_head, error_message), ...]
               a function as a rule must take a Doc object and get_forms as input and return (error_message, corrected_text)
         '''
-        self.nlp = spacy.load(spacy_pipeline)
+        self.nlp = nlp
         self.get_forms = get_forms
         self.input_text = self.nlp(input_text)
         self.rules = rules

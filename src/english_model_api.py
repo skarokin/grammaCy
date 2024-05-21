@@ -1,23 +1,13 @@
-# pipeline: [(tokenizer) -> (EnglishModel.tagger) -> (EnglishModel.parser) -> (pretrained lemmatizer)]
-# input text goes through EnglishGrammarChecker which uses pipeline to check for grammar errors
 import spacy
+import lemminflect    # shows up as unused import but is used as a spaCy extension so don't remove :D
 from word_forms.word_forms import get_word_forms
+from get_forms import GetForms
 from english_model import EnglishModel
 from flask import Flask, request, jsonify
 
-# nlp = spacy.load('path/to/model')
+nlp = spacy.load('data/models/train_1/model-best')
+rules = [
 
-# required for the EnglishModel constructor (we define this outside to avoid loading NLTK and WordNet for each request)
-def get_forms(word: str, tag: str, nlp, get_word_forms) -> str:
-    forms = get_word_forms(word)
-    for p in forms:
-        for w in forms[p]:
-            curr = nlp(w)[0]
-            # must enforce word is not the same... eg 'fast' is both an adjective and an adverb
-            if curr.tag_ == tag and curr.text != word:
-                print(f'Found {tag} form for {word}: {curr.text}')
-                return curr.text
-        
-    print(f'Could not find {tag} form for: {word}')
-    return None
-            
+]
+gf = GetForms(nlp, lemminflect, get_word_forms)
+em = EnglishModel(nlp, gf, 'This backpack was optimized for carry books.', rules)

@@ -244,7 +244,7 @@ class ConlluAugmentor:
                 batch = []
                 
                 for filename in filenames:
-                    if filename.endswith('_aug.conllu') or not filename.endswith('conllu'): 
+                    if filename.startswith('zbatch_') or not filename.endswith('conllu'): 
                         continue
 
                     f = (root, os.path.join(root, filename))
@@ -286,19 +286,19 @@ def main():
     # 3. change base form verbs after modals to gerunds
     # 4. change base form verbs after modal to past tense verbs 
     # 5. change gerunds after prepositions to base form verbs
-    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.25),
-             ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.25),
-             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.25),
-             ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.25),
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.25),
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.25),
-             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.25)
+    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),
+             ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.75),
+             ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.75),
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.10),
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.10),
+             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 1)
             ]
     
     ca = ConlluAugmentor(data_dir, rules=rules)
     start = time.time()
     
-    ca.run(batch_size=120)
+    ca.run(batch_size=20)
     end = time.time()
     print(f"finished in {end-start} seconds")
 

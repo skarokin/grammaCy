@@ -1,8 +1,9 @@
-# takes CoNLL-U formatted treebank from in_dir, converts to spaCy binary and saves to out_dir
+# takes CoNLL-U formatted treebank from in_dir, converts to spaCy binary, and automatically splits into train and dev sets
 # this must be done in order to train a spaCy component
-# uses multithreading because executing commands one at a time kinda sucks...
+# uses multithreading to convert multiple files at once
 import os
 from concurrent.futures import ThreadPoolExecutor
+from train_dev_split import TrainDevSplit
 
 class Conllu2Spacy:
     FILE_TYPE = "spacy"
@@ -32,9 +33,11 @@ class Conllu2Spacy:
         list_of_files = self.__check_dir__()
 
         for file in list_of_files:
-            print("\t" + file)
-            command = base_command + f" {file} {self.out_dir} --converter {self.CONVERTER} --file-type {self.FILE_TYPE} -n 10"
-            command_list.append(command)
+            filename = os.path.basename(file)
+            if filename.startswith("zbatch_"):
+                print("\t" + file)
+                command = base_command + f" {file} {self.out_dir} --converter {self.CONVERTER} --file-type {self.FILE_TYPE} -n 10"
+                command_list.append(command)
             
         print() 
 
@@ -55,6 +58,9 @@ def main():
     out_dir = r"data/processed"
     c2s = Conllu2Spacy(in_dir, out_dir, 'conllu')
     c2s.run()
+
+    tds = TrainDevSplit(out_dir, 0.2)
+    tds.split()
 
 if __name__ == "__main__":
     main()
