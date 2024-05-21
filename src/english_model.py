@@ -11,21 +11,19 @@
 # - consistent verb tense
 # - subject-verb-object order check
 class EnglishModel:
-    def __init__(self, nlp, get_forms, input_text, rules):
+    def __init__(self, nlp, get_forms, rules):
         '''
         spacy_pipeline: a spaCy pipeline
         get_forms: a function that takes a token and desired tag and returns the form of the token with that tag
-        input_text: the string to be processed
         rules: a list of either tuples or functions that enforce rules on the input text
               [(dep_rel, child_tag_list, head_tag_list, correct_tag_list, enforce_child_or_head, error_message), ...]
               a function as a rule must take a Doc object and get_forms as input and return (error_message, corrected_text)
         '''
         self.nlp = nlp
         self.get_forms = get_forms
-        self.input_text = self.nlp(input_text)
         self.rules = rules
     
-    def enforce(self):
+    def enforce(self, input_text):
         errors = []
         for rule in self.rules:
             # if rule is a function, call it with the input text
@@ -33,7 +31,7 @@ class EnglishModel:
             if callable(rule):
                 # call rule(self.input_text, self.get_forms) where input_text is a Doc object
                 # rule should return (error_message, corrected_word_index, corrected_word)
-                error_message, corrected_word_index, corrected_word = rule(self.input_text, self.get_forms)
+                error_message, corrected_word_index, corrected_word = rule(input_text, self.get_forms)
                 if error_message:
                     errors.append((error_message, corrected_word_index, corrected_word))
             else:
