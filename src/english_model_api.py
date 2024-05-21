@@ -9,5 +9,6 @@ nlp = spacy.load('data/models/train_1/model-best')
 rules = [
 
 ]
+
 gf = GetForms(nlp, lemminflect, get_word_forms)
-em = EnglishModel(nlp, gf, 'This backpack was optimized for carry books.', rules)
+em = EnglishModel(nlp, gf, rules)

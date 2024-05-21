@@ -7,7 +7,7 @@ class GetForms():
         self.lemminflect = lemminflect
         self.word_forms = word_forms
 
-    def get_forms(self, word, lemma, tag) -> str:
+    def get_forms(self, word: str, lemma: str, tag: str) -> str:
         word = word.lower()
         # if trying to convert adj to adv or vice versa, use word_forms library because lemminflect cannot convert between adj and adv
         if tag in ['JJ', 'JJR', 'JJS', 'RB', 'RBR', 'RBS']:

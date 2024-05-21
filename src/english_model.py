@@ -13,14 +13,14 @@
 class EnglishModel:
     def __init__(self, nlp, get_forms, rules):
         '''
-        spacy_pipeline: a spaCy pipeline
-        get_forms: a function that takes a token and desired tag and returns the form of the token with that tag
+        nlp: a spaCy pipeline
+        get_forms: a function that takes (word, lemma, tag) and returns the desired tag form of that word
         rules: a list of either tuples or functions that enforce rules on the input text
               [(dep_rel, child_tag_list, head_tag_list, correct_tag_list, enforce_child_or_head, error_message), ...]
               a function as a rule must take a Doc object and get_forms as input and return (error_message, corrected_text)
         '''
         self.nlp = nlp
-        self.get_forms = get_forms
+        self.get_forms = get_forms    
         self.rules = rules
     
     def enforce(self, input_text):
