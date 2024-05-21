@@ -6,9 +6,16 @@ from english_model import EnglishModel
 from flask import Flask, request, jsonify
 
 nlp = spacy.load('data/models/train_1/model-best')
+
 rules = [
 
 ]
 
 gf = GetForms(nlp, lemminflect, get_word_forms)
 em = EnglishModel(nlp, gf, rules)
+
+app = Flask(__name__)
+
+def process_request(json_data):
+    errors = em.enforce(json_data)
+    # return JSON to client'
