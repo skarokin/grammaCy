@@ -20,8 +20,8 @@
 # note that word_forms library had to be modified to ensure thread safety of wordnet
 # see get_related_lemmas_rec() in word_forms/word_forms.py. my fork of this is https://github.com/skarokin/word_forms_threadsafe
 import spacy
-from word_forms.word_forms import get_word_forms
 import lemminflect
+import json
 import copy
 import random
 import os
@@ -77,33 +77,40 @@ class ConlluAugmentor:
     # rules: list of rule tuples [(dep_rel, child_pos_list, head_pos_list, old_tag_list, aug_tag, child, probability)]
     # NOTE: old_tag and child work together; if child is True, then old_tag is the tag of the child to change to aug_tag
     #       if child is False, then old_tag is the tag of the head to change to aug_tag  
-    def __init__(self, data_dir: str, rules: list[tuple[any]]=None, model: str='en_core_web_sm'):
+    def __init__(self, data_dir: str, ADJECTIVE_TO_ADVERB, ADVERB_TO_ADJECTIVE, rules: list[tuple[any]]=None, model: str='en_core_web_sm'):
         self.data_dir = data_dir
         self.rules = rules
-        self.nlp = spacy.load(model) 
+        self.nlp = spacy.load(model)
+        self.ADJECTIVE_TO_ADVERB = ADJECTIVE_TO_ADVERB
+        self.ADVERB_TO_ADJECTIVE = ADVERB_TO_ADJECTIVE
 
     # note: not perfect; sometimes generates extra forms that do not exist
     # extract first form that matches desired POS using spacy's POS tagger
-    def get_forms(self, word: str, lemma: str, tag: str, nlp, get_word_forms) -> str:
+    def get_forms(self, word: str, lemma: str, tag: str, nlp) -> str:
+        lemma = nlp(word)[0]._.lemma()
         word = word.lower()
-        # if trying to convert adj to adv or vice versa, use word_forms library because lemminflect cannot convert between adj and adv
-        if tag in ['JJ', 'JJR', 'JJS', 'RB', 'RBR', 'RBS']:
-            forms = get_word_forms(lemma)
-            for p in forms:
-                for w in forms[p]:
-                    curr = nlp(w)[0]
-                    # must enforce word is not the same... eg 'fast' is both an adjective and an adverb
-                    if curr.tag_ == tag and curr.text != word:
-                        print(f'Found {tag} form for {word}: {curr.text}')
-                        return curr.text
-            
-            print(f'Could not find {tag} form for: {word}')
+        
+        if tag in ['RB', 'RBR', 'RBS']:
+            if word in self.ADJECTIVE_TO_ADVERB:
+                form = self.ADJECTIVE_TO_ADVERB[word].lower()
+                if form != word:
+                    print(f'Found {tag} form for {word}: {form}')
+                    return form
             return None
-        # else, use lemminflect cause it's faster and more accurate
-        form = nlp(lemma)[0]._.inflect(tag)
+        
+        elif tag in ['JJ', 'JJR', 'JJS']:
+            if word in self.ADVERB_TO_ADJECTIVE:
+                form = self.ADVERB_TO_ADJECTIVE[word].lower()
+                if form != word:
+                    print(f'Found {tag} form for {word}: {form}')
+                    return form
+                return None
+        
+        form = nlp(lemma)[0]._.inflect(tag).lower()
         if form != word:
             print(f'Found {tag} form for {word}: {form}')
             return form
+    
         print(f'Could not find {tag} form for: {word}')
         return None
             
@@ -149,7 +156,7 @@ class ConlluAugmentor:
     # augments a sentence with the first random rule that matches the sentence
     # if no rule matches, return empty list. else, return the augmented sentence
     # automatically updates POS if the new tag falls under a different POS category
-    def augment_sentence(self, sentence: list[str], nlp, get_word_forms) -> list[str]:
+    def augment_sentence(self, sentence: list[str], nlp) -> list[str]:
         shuffled_rules = random.sample(self.rules, len(self.rules))
         aug_sentence = copy.deepcopy(sentence)
 
@@ -160,7 +167,7 @@ class ConlluAugmentor:
                 if word[7] == dep_rel and word[3] in child_pos_list and sentence[int(word[6])-1][3] in head_pos_list and random.uniform(0, 1) < probability: 
                         # update tag of child if child is True and child tag is in old_tag_list
                         if child and sentence[index][4] in old_tag_list:
-                            new_form = self.get_forms(word[1], word[2], aug_tag, nlp, get_word_forms)
+                            new_form = self.get_forms(word[1], word[2], aug_tag, nlp)
                             if new_form:
                                 aug_sentence[index][4] = aug_tag
                                 aug_sentence[index][1] = new_form
@@ -170,7 +177,7 @@ class ConlluAugmentor:
                         # update tag of head if child is False and head exists and head tag is in old_tag_list
                         elif int(word[6]) > 0 and sentence[int(word[6])-1][4] in old_tag_list:
                             head_index = int(word[6]) - 1    # because head is 1-indexed
-                            new_form = self.get_forms(sentence[head_index][1], sentence[head_index][2], aug_tag, nlp, get_word_forms)
+                            new_form = self.get_forms(sentence[head_index][1], sentence[head_index][2], aug_tag, nlp)
                             if new_form:
                                 aug_sentence[head_index][4] = aug_tag 
                                 aug_sentence[head_index][1] = new_form
@@ -187,7 +194,7 @@ class ConlluAugmentor:
     # for given .conllu file, try to augment each sentence with a random rule 
     # creates a new .conllu file with the augmented data and append the augmented data to that .conllu file
     # augments on a file-by-file basis, so we can run this on a deep traversal of the data directory
-    def augment_conllu_file(self, conllu_path: str, out_file: str, counter: list[int], lock: Lock, counter_lock: Lock, nlp, get_word_forms):
+    def augment_conllu_file(self, conllu_path: str, out_file: str, counter: list[int], lock: Lock, counter_lock: Lock, nlp):
         if self.rules is None:
             raise ValueError('No rules specified for augmentation, aborting...')
 
@@ -198,7 +205,7 @@ class ConlluAugmentor:
         # lock ensures that only one thread writes to the file at a time
         # all files in the same batch will write augmentations to the same file 
         for sentence in formatted_data:
-            aug_sentence = self.augment_sentence(sentence, nlp, get_word_forms)
+            aug_sentence = self.augment_sentence(sentence, nlp)
             if aug_sentence != []:
                 with lock:
                     with open(out_file, 'a') as file:
@@ -206,7 +213,7 @@ class ConlluAugmentor:
                 with counter_lock:
                     counter[0] += 1 # increment counter; remember that counter is a list because int is immutable
 
-    def run_batch(self, batch_info: tuple[int, list[tuple[str, str]]], nlp, get_word_forms):
+    def run_batch(self, batch_info: tuple[int, list[tuple[str, str]]], nlp):
         number, file_tuples = batch_info
 
         print(f"Running batch {number}")
@@ -217,7 +224,7 @@ class ConlluAugmentor:
         threads = []
         out_file = f'{file_tuples[0][0]}/zbatch_{number}_aug.conllu'
 
-        threads = [Thread(target=self.augment_conllu_file, args=(file_tuple[1], out_file, counter, lock, counter_lock, nlp, get_word_forms)) for file_tuple in file_tuples]
+        threads = [Thread(target=self.augment_conllu_file, args=(file_tuple[1], out_file, counter, lock, counter_lock, nlp)) for file_tuple in file_tuples]
 
         # start threads
         for thread in threads:
@@ -265,7 +272,7 @@ class ConlluAugmentor:
             start = time.time()
 
             with cf.ProcessPoolExecutor() as executor:
-                executor.map(self.run_batch, batches, [self.nlp]*len(batches), [get_word_forms]*len(batches))
+                executor.map(self.run_batch, batches, [self.nlp]*len(batches))
             
             end = time.time()
 
@@ -281,24 +288,29 @@ def main():
 
     # dep_rel to look for, list of possible child POS, list of possible head POS, 
     # list of old tags to consider, new tag to change old tag to, whether to change child or head, probability of changing
-    # 1. change gerunds and past tense verbs to base form verbs and vice versa
+    # 1. change gerunds and past tense verbs to base form verbs
     # 2. change adjectives to adverbs and vice versa
     # 3. change base form verbs after modals to gerunds
     # 4. change base form verbs after modal to past tense verbs 
     # 5. change gerunds after prepositions to base form verbs
-    rules = [('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),
-             ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),
-             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.75),
-             ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.75),
+    rules = [# ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),  <-- detrimental to performance
+             # ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),         <-- detrimental to performance
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.30),
+             # ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.30),  <-- for some reason this rule is literally never triggered so commenting out
              ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.10),
              ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.10),
-             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 1)
+             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.50),
             ]
     
-    ca = ConlluAugmentor(data_dir, rules=rules)
+    with open('src/adj_to_adv.txt', 'r') as f:
+        ADJECTIVE_TO_ADVERB = json.load(f)
+    with open('src/adv_to_adj.txt', 'r') as f:
+        ADVERB_TO_ADJECTIVE = json.load(f)
+    
+    ca = ConlluAugmentor(data_dir, ADJECTIVE_TO_ADVERB, ADVERB_TO_ADJECTIVE, rules=rules)
     start = time.time()
     
-    ca.run(batch_size=20)
+    ca.run(batch_size=120)
     end = time.time()
     print(f"finished in {end-start} seconds")
 
