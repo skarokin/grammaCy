@@ -1,3 +1,4 @@
+import json
 # NOTE: our API is containerized and kept alive with the spaCy pipeline and get_forms function already loaded in memory
 #       this ensures low latency by avoiding the overhead of loading the pipeline and get_forms function for each request
 #       thus the constructor requires the pipeline and get_forms function to be passed in as arguments
@@ -45,8 +46,11 @@ class EnglishModel:
                             else:
                                 if token.tag_ not in correct_tag_list:
                                     errors.append((error_message, token.i, self.get_forms.get_forms(token.text, correct_tag_list[0])))
-        return errors
+        return self.format_errors(errors)
     
     # JSON format: {"errors": [{"error": "error message", "corrected_word_index": 0, "suggestion": "corrected_word"}]
     def format_errors(self, errors):
-        pass
+        return json.dumps({
+            "errors": [{"error": error_message, "corrected_word_index": corrected_word_index, "suggestion": suggestion} 
+                       for error_message, corrected_word_index, suggestion in errors]
+        })

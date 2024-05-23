@@ -36,7 +36,7 @@ Why not use a statistical model? They address the nuances of natural language AN
     - Given that grammar errors could be detected by just finding a dependency relation and comparing POS tags...
         - For each grammar error of interest, we looked for the specific dependency relation it could be identified by in the corpus.
         - Then, we changed the POS of either the head or the child of the dependency relation to exactly model the desired grammar error.
-4. Converted augmented data into `.spacy.` and trained the Tok2Vec, POS tagger, dependency parser, and morphologizer components.
+4. Converted augmented data into `.spacy` files and trained the Tok2Vec, POS tagger, dependency parser, and morphologizer components.
     - We had to train our own Tok2Vec component because pretrained vectors (like `en_core_web_lg`) were only trained on grammatical sentences.
 6. Finally, we have a model capable of producing correct POS tags and dependency trees for both grammatical sentences and sentences with our desired grammar errors.
     - From here, simply develop a comprehensive rule set!
