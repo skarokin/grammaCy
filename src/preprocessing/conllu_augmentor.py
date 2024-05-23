@@ -295,11 +295,11 @@ def main():
     # 5. change gerunds after prepositions to base form verbs
     rules = [# ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),  <-- detrimental to performance
              # ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),         <-- detrimental to performance
-             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.30),
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.25),
              # ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.30),  <-- for some reason this rule is literally never triggered so commenting out
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.10),
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.10),
-             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.50),
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.05),
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.05),
+             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.25),
             ]
     
     with open('src/adj_to_adv.txt', 'r') as f:
@@ -310,7 +310,7 @@ def main():
     ca = ConlluAugmentor(data_dir, ADJECTIVE_TO_ADVERB, ADVERB_TO_ADJECTIVE, rules=rules)
     start = time.time()
     
-    ca.run(batch_size=120)
+    ca.run(batch_size=30)
     end = time.time()
     print(f"finished in {end-start} seconds")
 
