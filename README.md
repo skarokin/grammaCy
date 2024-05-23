@@ -29,6 +29,7 @@ Rule-based systems are fast, easy to debug, generate detailed suggestions, and c
     - From here, simply enforce rules by comparing the POS tags of a specific dependency relation or by calling some function on the parsed and tagged input.
 
 ### How can I use this for my own grammar rules/language?
+- Clone the repository (this library is all about providing customizable tools for building a language-independent model and developing rules, so it is not a package)
 - Gather a PTB or CoNLL-U corpus for your language of choice
     - If using PTB (constituency parse) data, you need to use `constituency2dependency.py` in the `preprocessing/` directory
 - Augment your data on grammar errors you wish to identify by using `conllu_augmentor.py` (multithreaded and multiprocessed) in the `preprocessing/` directory
