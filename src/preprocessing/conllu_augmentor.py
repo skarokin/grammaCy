@@ -1,24 +1,14 @@
-# augments the conllu dataset; for purpose of training POS tagger and dependency parser
-# the error injection is only changing the POS tags of the words (and also obviously the word itself) because we want
-# to ensure that the dependency parser can recognize the correct dependencies even if the POS tags are wrong
-# ERRORS WE NEED TO SIMULATE:
-#   - noun + gerund: if gerund is 'nsubj' of noun, change gerund to base form verb
-#       - in auxiliary + base form verb, model sometimes thinks the base form verb is a noun
-#   - adp + gerund: if gerund is 'pcomp' of preposition, change gerund to base form verb 
-#       - in adp + base form verb, model thinks the base form verb is a noun
-#   - adjective: for each adjective, change to adverb (and vice versa)
-#       - model sometimes thinks misplaced adjectives are adverbs and vice versa
-#       - suggestion: if adjective is 'advmod' of verb, suggest change to adverb (bc this is incorrect placement of adjective) and etc
-# ERRORS WE DON'T NEED TO SIMULATE:
-#   - subject verb agreement: model already diffentiates between singular and plural nouns even if ungrammatical sentence
-#       - suggest a different form of the verb before the noun
-#   - auxiliary verbs: model already can handle wrong form of aux verbs like 'be' and 'have'
-#       - suggest a different form of auxiliary verb based on context
-#   - gerund vs past tense: model already can differentiate between gerund and past tense verbs
-#       - suggest adding a preposition before the gerund OR making the gerund a past tense verb
+# errors pretrained model can't handle:
+#   - aux + base form -> aux + gerund
+#   - adp + gerund -> adp + base form
+#   - adjective -> adverb
+# errors pretrained model can handle:
+#   - subject verb agreement: pretrained model can already differentiate between all verb forms if they are related by 'nsubj'
+#   - auxiliary verbs: pretrained model already can handle wrong form of aux verbs like 'be' and 'have'
+#   - and a lot more... just a few grammar errors that it can't handle (but they're very common ones so need to fix)
 
-# note that word_forms library had to be modified to ensure thread safety of wordnet
-# see get_related_lemmas_rec() in word_forms/word_forms.py. my fork of this is https://github.com/skarokin/word_forms_threadsafe
+# note that i previously used a fork of word_forms (https://github.com/skarokin/word_forms_threadsafe) to generate 
+# different forms of words, but later found lemminflect (faster) and used a rule-based map of adj<->adv 
 import spacy
 import lemminflect
 import json
@@ -32,9 +22,7 @@ import time
 import traceback
 
 # mapping to automatically update POS if the new tag falls under a different POS category
-# Pranshu's idea; this is necessary for adjective <-> adverb and perhaps other augmentations if the user wants to add them
-# NOTE: ignores punctuations, symbols, and affixes
-# NOTE: this isn't a true 1-1 mapping because, e.g. all verbs can be 'AUX' or 'VERB' and 'RB' can be 'ADV' or 'PART' but we can ignore
+# (thanks Pranshu for idea) this is only necessary for adjective <-> adverb but added extra just for completeness
 tag_to_pos = {
     'JJ': 'ADJ',
     'JJR': 'ADJ',
@@ -67,22 +55,26 @@ tag_to_pos = {
     'NNPS': 'PROPN',
 }
 
-# NOTE: this messes with lemma data, but lemmas dont matter for us. If you require a lemmatizer then
-#       ensure that you use default spaCy lemmatizers and *do not train lemmatizer on this augmented data*
-#       **please only train the POS tagger and dependency parser on thie augmented data** 
+# NOTE: this messes with lemma data, so pipelines requiring the lemma should use a pretrained lemmatizer 
 class ConlluAugmentor:
     '''A class to augment a dataset of .conllu files by injecting errors into sentences of interest'''
     
     # data_dir: directory containing .conllu files
     # rules: list of rule tuples [(dep_rel, child_pos_list, head_pos_list, old_tag_list, aug_tag, child, probability)]
-    # NOTE: old_tag and child work together; if child is True, then old_tag is the tag of the child to change to aug_tag
-    #       if child is False, then old_tag is the tag of the head to change to aug_tag  
+    # - old_tag and child work together; if child is True, then old_tag is the tag of the child to change to aug_tag
+    #   if child is False, then old_tag is the tag of the head to change to aug_tag  
     def __init__(self, data_dir: str, ADJECTIVE_TO_ADVERB, ADVERB_TO_ADJECTIVE, rules: list[tuple[any]]=None, model: str='en_core_web_sm'):
         self.data_dir = data_dir
         self.rules = rules
         self.nlp = spacy.load(model)
         self.ADJECTIVE_TO_ADVERB = ADJECTIVE_TO_ADVERB
         self.ADVERB_TO_ADJECTIVE = ADVERB_TO_ADJECTIVE
+
+    def add_rule(self, rule: tuple[any]):
+        if (rule[0], rule[1], rule[2], rule[3], rule[4], rule[5]) in self.rules:
+            return
+
+        self.rules.append(rule)
 
     # note: not perfect; sometimes generates extra forms that do not exist
     # extract first form that matches desired POS using spacy's POS tagger
@@ -135,14 +127,6 @@ class ConlluAugmentor:
         lines = ['\t'.join(word) for word in sentence]
         return f'# sent_id = {sent_id}\n' + '\n'.join(lines) + '\n\n'
 
-    # add a rule to list of rules
-    def add_rule(self, rule: tuple[any]):
-        # if dep_rel, pos, aug_tag already exists, this is a duplicate rule
-        if (rule[0], rule[1], rule[2]) in self.rules:
-            return
-
-        self.rules.append(rule)
-
     # open .conllu file and return formatted data
     def open_conllu_file(self, conllu_path: str) -> list[list[str]]:
         if not conllu_path.endswith('.conllu'):
@@ -171,19 +155,19 @@ class ConlluAugmentor:
                             if new_form:
                                 aug_sentence[index][4] = aug_tag
                                 aug_sentence[index][1] = new_form
-                                aug_sentence[index][3] = tag_to_pos[aug_tag] # tag_to_pos is 1-1 (even though actual mapping isnt) so this is safe
+                                aug_sentence[index][3] = tag_to_pos[aug_tag]
                             else:
-                                return []    # no augmentation possible
+                                return []
                         # update tag of head if child is False and head exists and head tag is in old_tag_list
                         elif int(word[6]) > 0 and sentence[int(word[6])-1][4] in old_tag_list:
-                            head_index = int(word[6]) - 1    # because head is 1-indexed
+                            head_index = int(word[6]) - 1    # words are 1-indexed in CoNLL-U format
                             new_form = self.get_forms(sentence[head_index][1], sentence[head_index][2], aug_tag, nlp)
                             if new_form:
                                 aug_sentence[head_index][4] = aug_tag 
                                 aug_sentence[head_index][1] = new_form
                                 aug_sentence[head_index][3] = tag_to_pos[aug_tag]
                             else:
-                                return []    # no augmentation possible
+                                return []
                         else:
                             continue    
                         
@@ -191,9 +175,8 @@ class ConlluAugmentor:
         # no rules matched for this sentence 
         return []
 
-    # for given .conllu file, try to augment each sentence with a random rule 
-    # creates a new .conllu file with the augmented data and append the augmented data to that .conllu file
-    # augments on a file-by-file basis, so we can run this on a deep traversal of the data directory
+    # run augment_sentence on an entire .conllu file
+    # creates a new .conllu file with the augmented data and appends it to the data directory
     def augment_conllu_file(self, conllu_path: str, out_file: str, counter: list[int], lock: Lock, counter_lock: Lock, nlp):
         if self.rules is None:
             raise ValueError('No rules specified for augmentation, aborting...')
@@ -202,7 +185,7 @@ class ConlluAugmentor:
         print(f'Augmenting {conllu_path}...')
 
         # augment each sentence in the file then output to a new file 
-        # lock ensures that only one thread writes to the file at a time
+        # lock ensures that only one thread writes to the file or increments counter at a time
         # all files in the same batch will write augmentations to the same file 
         for sentence in formatted_data:
             aug_sentence = self.augment_sentence(sentence, nlp)
@@ -213,6 +196,8 @@ class ConlluAugmentor:
                 with counter_lock:
                     counter[0] += 1 # increment counter; remember that counter is a list because int is immutable
 
+    # augments {batch_size} files concurrently (python fake concurrency but this is still significantly faster)
+    # writes the augmentations of each file within a batch to a single file (may need to change if batch size is too large)
     def run_batch(self, batch_info: tuple[int, list[tuple[str, str]]], nlp):
         number, file_tuples = batch_info
 
@@ -220,13 +205,12 @@ class ConlluAugmentor:
 
         lock = Lock()
         counter_lock = Lock()
-        counter = [0]    # hack since int is immutable but list is mutable
+        counter = [0]    # hack to ensure counter is passed by reference
         threads = []
         out_file = f'{file_tuples[0][0]}/zbatch_{number}_aug.conllu'
 
         threads = [Thread(target=self.augment_conllu_file, args=(file_tuple[1], out_file, counter, lock, counter_lock, nlp)) for file_tuple in file_tuples]
 
-        # start threads
         for thread in threads:
             thread.start()
         
@@ -239,8 +223,7 @@ class ConlluAugmentor:
 
         print(f"Batch {number} finished in {end_time-start_time} seconds")
 
-    # multi-processing version of ConlluAugmentor
-    # batch_size: number of files to process in parallel
+    # processes {num cores in machine} batches in parallel
     def run(self, batch_size: int=20):
         try:
             start = time.time()
@@ -282,24 +265,21 @@ class ConlluAugmentor:
             print(f'Error augmenting dataset: {e}')
             traceback.print_exc()
 
-# testing testing :3
 def main():
     data_dir = 'data/raw/'
 
-    # dep_rel to look for, list of possible child POS, list of possible head POS, 
-    # list of old tags to consider, new tag to change old tag to, whether to change child or head, probability of changing
     # 1. change gerunds and past tense verbs to base form verbs
     # 2. change adjectives to adverbs and vice versa
     # 3. change base form verbs after modals to gerunds
     # 4. change base form verbs after modal to past tense verbs 
     # 5. change gerunds after prepositions to base form verbs
-    rules = [# ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),  <-- detrimental to performance
-             # ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),         <-- detrimental to performance
+    rules = [# ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),  <-- may be detrimental to performance
+             # ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),         <-- may be detrimental to performance
              ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.25),
-             # ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.30),  <-- for some reason this rule is literally never triggered so commenting out
+             # ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.30),  <-- this rule is literally never triggered so commenting out
              ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.05),
              ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.05),
-             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.25),
+             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.25), # <-- model has trouble with this rule even though high probability 
             ]
     
     with open('src/adj_to_adv.txt', 'r') as f:

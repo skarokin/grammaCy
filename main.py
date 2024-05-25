@@ -11,13 +11,14 @@ with open('src/adv_to_adj.txt', 'r') as f:
     ADVERB_TO_ADJECTIVE = json.load(f)
 
 def main():
-    nlp = spacy.load('data/models/novectors5/model-best')
+    nlp = spacy.load('data/models/novectors11/model-best')
 
     sentences = [
         'You can learning word embeddings by running the following command',    # verb after modal should be in base form                                      
-        'I drunk fought that guy and can learning word embeddings too.',        # adjective/adverb confusion, verb after modal should be in base form                       
-        'Anxious, they returned home before the storm.',                        # adjective/adverb confusion
-        'grammaCy improves rule-based systems by leverage dependency parsing.'  # verb after preposition should be in gerund form (model having trouble here)
+        'I drunk fought that guy and can learning word embeddings too',        # adjective/adverb confusion, verb after modal should be in base form                       
+        'Anxious, they returned home before the storm',                        # adjective/adverb confusion
+        'grammaCy improves rule-based systems with dependency parsing',        # none
+        'They ran quickly.',
     ]
 
     rules = [
