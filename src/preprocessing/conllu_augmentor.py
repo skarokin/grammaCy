@@ -132,7 +132,7 @@ class ConlluAugmentor:
         if not conllu_path.endswith('.conllu'):
             return None
         
-        with open(conllu_path, 'r') as f:
+        with open(conllu_path, 'r', encoding='utf-8') as f:
             data = f.read()
         
         return self.format_data(data)
@@ -191,7 +191,7 @@ class ConlluAugmentor:
             aug_sentence = self.augment_sentence(sentence, nlp)
             if aug_sentence != []:
                 with lock:
-                    with open(out_file, 'a') as file:
+                    with open(out_file, 'a', encoding='utf-8') as file:
                         file.write(f'{self.reverse_format_data(aug_sentence, counter[0])}')
                 with counter_lock:
                     counter[0] += 1 # increment counter; remember that counter is a list because int is immutable
@@ -266,7 +266,7 @@ class ConlluAugmentor:
             traceback.print_exc()
 
 def main():
-    data_dir = 'data/raw/'
+    data_dir = 'data/raw/gum_cleaned'
 
     # 1. change gerunds and past tense verbs to base form verbs
     # 2. change adjectives to adverbs and vice versa
@@ -275,11 +275,11 @@ def main():
     # 5. change gerunds after prepositions to base form verbs
     rules = [# ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),  <-- may be detrimental to performance
              # ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),         <-- may be detrimental to performance
-             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.25),
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 1),
              # ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.30),  <-- this rule is literally never triggered so commenting out
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.05),
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.05),
-             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.25), # <-- model has trouble with this rule even though high probability 
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.50),
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.50),
+             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 1), # <-- model has trouble with this rule even though high probability 
             ]
     
     with open('src/adj_to_adv.txt', 'r') as f:

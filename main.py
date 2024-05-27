@@ -14,7 +14,7 @@ def main():
     nlp = spacy.load('data/models/novectors11/model-best')
 
     sentences = [
-        'You can learning word embeddings by running the following command',    # verb after modal should be in base form                                      
+        'You can learning word embeddings by running the following command',   # verb after modal should be in base form                                      
         'I drunk fought that guy and can learning word embeddings too',        # adjective/adverb confusion, verb after modal should be in base form                       
         'Anxious, they returned home before the storm',                        # adjective/adverb confusion
         'grammaCy improves rule-based systems with dependency parsing',        # none

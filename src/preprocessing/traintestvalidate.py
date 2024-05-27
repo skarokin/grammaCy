@@ -32,4 +32,4 @@ def split(data_dir):
     for file in validate:
         os.rename(data_dir+"/"+file, data_dir + "/validate/" + file)
 
-split(r"data/raw")
+split(r"data/raw/gum")
