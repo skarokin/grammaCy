@@ -1,7 +1,7 @@
 ﻿# grammaCy
 A customizable, multi-language grammar checking library that leverages dependency parsing to improve rule-based grammar checking systems. 
-
-Check out our fully-fledged English model [here]() with support for many grammar rules!
+- [Here](https://github.com/akuwuh/grammacy-api) is our Flask endpoint for a fully developed English model with a comprehensive rule set.
+- [Here]() is our website to try out the above model, with more comprehensive documentation and a dev blog. 
 
 Some parts of this project are inspired by this paper from Maxim Mozgovoy ["Grammar Checking with Dependency Parsing: A Possible Extension for LanguageTool"](https://mmozgovoy.dev/papers/mozgovoy11b.pdf)
 
