@@ -1,7 +1,9 @@
+# a sample implementation of the EnglishModel class. Our actual production model
+# contains a more complex set of rules and a custom model. This is a simplified version for demonstration purposes.
 import spacy
 import lemminflect
 from src.get_forms import GetForms
-from src.english_model import EnglishModel
+from src.sample_english_model import EnglishModel
 import json
 
 with open('src/adj_to_adv.txt', 'r') as f:
@@ -11,19 +13,23 @@ with open('src/adv_to_adj.txt', 'r') as f:
     ADVERB_TO_ADJECTIVE = json.load(f)
 
 def main():
-    nlp = spacy.load('data/models/novectors11/model-best')
+    # note that en_core_web_sm fails on most of the sample rules given below
+    # to see our production model in action, visit https://www.grammacy.com
+    # if you wish to use our production model, visit https://github.com/akuwuh/grammacy-api
+    nlp = spacy.load('en_core_web_sm')
 
     sentences = [
-        'You can learning word embeddings by running the following command',   # verb after modal should be in base form                                      
-        'I drunk fought that guy and can learning word embeddings too',        # adjective/adverb confusion, verb after modal should be in base form                       
-        'Anxious, they returned home before the storm',                        # adjective/adverb confusion
-        'grammaCy improves rule-based systems with dependency parsing',        # none
-        'They ran quickly.',
+        'You can learning word embeddings by running the following command',                         
+        'I drunk fought that guy and can learning word embeddings too',         
+        'Anxious, they returned home before the storm',                        
+        'This backpack was optimized for carry heavy books',
+        'She ran.',
+        'She is beautifully.'
     ]
 
     rules = [
         ('aux', ['MD'], ['VBG', 'VBD', 'VBZ'], ['VB'], False, 'Verbs after modals should be in base form'),
-        ('advmod', ['RB', 'JJ'], ['VBD', 'VBZ', 'VBN', 'VBP'], ['RB'], True, 'Adjective/adverb confusion: use an adverb instead'),
+        ('advmod', ['RB', 'JJ'], ['VBD', 'VBZ', 'VBN', 'VBP', 'VBG'], ['RB'], True, 'Adjective/adverb confusion: use an adverb instead'),
         ('amod', ['RB', 'JJ'], ['VBD', 'VBZ', 'VBN'], ['JJ'], True, 'Adjective/adverb confusion: use an adjective instead'),
         ('case', ['IN'], ['VB', 'VBD', 'VBZ', 'VBN', 'VBP'], ['VBG'], False, 'A verb after a preposition should be in gerund form'),
         ('mark', ['IN'], ['VB', 'VBD', 'VBZ', 'VBN', 'VBP'], ['VBG'], False, 'A verb after a subordinating conjunction should be in gerund form')

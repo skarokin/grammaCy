@@ -207,7 +207,7 @@ class ConlluAugmentor:
         counter_lock = Lock()
         counter = [0]    # hack to ensure counter is passed by reference
         threads = []
-        out_file = f'{file_tuples[0][0]}/zbatch_{number}_aug.conllu'
+        out_file = f'{file_tuples[0][0]}/1zbatch_{number}_aug.conllu'
 
         threads = [Thread(target=self.augment_conllu_file, args=(file_tuple[1], out_file, counter, lock, counter_lock, nlp)) for file_tuple in file_tuples]
 
@@ -266,7 +266,7 @@ class ConlluAugmentor:
             traceback.print_exc()
 
 def main():
-    data_dir = 'data/raw/gum_cleaned'
+    data_dir = 'data/raw/onto'
 
     # 1. change gerunds and past tense verbs to base form verbs
     # 2. change adjectives to adverbs and vice versa
@@ -275,11 +275,11 @@ def main():
     # 5. change gerunds after prepositions to base form verbs
     rules = [# ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),  <-- may be detrimental to performance
              # ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),         <-- may be detrimental to performance
-             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 1),
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.3),
              # ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.30),  <-- this rule is literally never triggered so commenting out
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.50),
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.50),
-             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 1), # <-- model has trouble with this rule even though high probability 
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.15),
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.15),
+             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.5), # <-- model has trouble with this rule even though high probability 
             ]
     
     with open('src/adj_to_adv.txt', 'r') as f:
@@ -290,7 +290,7 @@ def main():
     ca = ConlluAugmentor(data_dir, ADJECTIVE_TO_ADVERB, ADVERB_TO_ADJECTIVE, rules=rules)
     start = time.time()
     
-    ca.run(batch_size=30)
+    ca.run(batch_size=120)
     end = time.time()
     print(f"finished in {end-start} seconds")
 

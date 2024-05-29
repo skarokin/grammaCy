@@ -34,7 +34,7 @@ class Conllu2Spacy:
 
         for file in list_of_files:
             filename = os.path.basename(file)
-            if filename.startswith("zbatch_"):
+            if filename.startswith("zbatch_") or filename.startswith("1zbatch_"):
                 print("\t" + file)
                 command = base_command + f" {file} {self.out_dir} --converter {self.CONVERTER} --file-type {self.FILE_TYPE} -n 10"
                 command_list.append(command)
@@ -54,8 +54,8 @@ class Conllu2Spacy:
         self.__run_conversion__()
 
 def main():
-    in_dir = r"data/raw/gum_cleaned"
-    out_dir = r"data/processed"
+    in_dir = r"data/raw/onto"
+    out_dir = r"data/processed/ontoaug"
     c2s = Conllu2Spacy(in_dir, out_dir, 'conllu')
     c2s.run()
 

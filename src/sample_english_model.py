@@ -1,7 +1,4 @@
 import json
-# NOTE: our API is containerized and kept alive with the spaCy pipeline and get_forms function already loaded in memory
-#       this ensures low latency by avoiding the overhead of loading the pipeline and get_forms function for each request
-#       thus the constructor requires the pipeline and get_forms function to be passed in as arguments
 # this English model is fine tuned for these specific rules but can be easily extended to include more rules
 # - subject-verb agreement
 # - adjective/adverb confusion
