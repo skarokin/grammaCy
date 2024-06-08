@@ -9,24 +9,22 @@ Some parts of this project are inspired by this paper from Maxim Mozgovoy ["Gram
 Rule-based grammar checkers are desirable because they are...
 - Fast, as they either do not use machine learning at all or use extremely lightweight models like POS tagging.
 - Can generate meaningful suggestions since the violated rule is exactly known.
-- Can be developed by a linguist with little to no programming experience, since grammar rules are grammar rules no matter what.
+- Can be developed by a linguist with little to no programming experience.
 
-However, these systems have one major pitfall...
-- Cannot capture the nuances of language. Thus, developing a comprehensive rule set is tedious and inaccurate, as all of the exceptions to grammar rules in natural language must be accounted for.
+However, these systems cannot capture the nuances of natural language, thus significant manual effort is required to develop a comprehensive rule set to capture the many exceptions to grammar rules.
 
-We address this major pitfall by introducing dependency parsing to provide our rule set with a more complete representation of language. By leveraging the extra context given by a dependency parser, we improve the performance of rule-based checks and significantly reduce development time.
+We address this major pitfall by introducing dependency parsing. By leveraging the extra context given by a dependency parser, we improve the performance of rule-based checks and reduce manual effort as exceptions are accounted for.
 
-Why not use a statistical model? They address the nuances of natural language AND have very quick development times!
-- They are slow and not suitable for real-time grammar checking.
-- They struggle with out-of-vocabulary words.
+Why not statistical models?
+- They are slow, heavy, transformer-based models that are not suited for real-time grammar checking.
 - They do not provide meaningful suggestions.
 - They are more suited towards spelling correction and enforcing good writing style.
 
 ### How it works
 - Run an input sentence through a POS tagger and dependency parser, generating the synctatic relations between words and the part of speech of each word.
-- Enforce user-defined grammar rules by simply analyzing the POS tags of a specified dependency relation's head and child.
+- Enforce user-defined grammar rules by analyzing the POS tags of a specified dependency relation's head and child.
     - Every dependency relation has a 'whitelist' of grammatical head and child tags. Simply check if the tags are in the whitelist!
-    - Note that we incorporated some rules such as subject-verb-object order. These do not require use of the dependency tree.
+    - Note that we incorporated some rules such as subject-verb-object order. These do not require use of the dependency tree and had to be implemented as a separate function.
 
 ### How was the English model made?
 1. Used [LemmInflect](https://github.com/bjascob/LemmInflect) to generate different forms of a word under the same part of speech.
