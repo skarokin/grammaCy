@@ -60,9 +60,10 @@ class ConlluAugmentor:
     '''A class to augment a dataset of .conllu files by injecting errors into sentences of interest'''
     
     # data_dir: directory containing .conllu files
-    # rules: list of rule tuples [(dep_rel, child_pos_list, head_pos_list, old_tag_list, aug_tag, child, probability)]
+    # rules: list of rule tuples [(dep_rel, child_pos_list, head_pos_list, old_tag_list, aug_tag, child, aug_feat, probability)]
     # - old_tag and child work together; if child is True, then old_tag is the tag of the child to change to aug_tag
-    #   if child is False, then old_tag is the tag of the head to change to aug_tag  
+    #   if child is False, then old_tag is the tag of the head to change to aug_tag
+    #   if feat is not empty, change the morph feats
     def __init__(self, data_dir: str, ADJECTIVE_TO_ADVERB, ADVERB_TO_ADJECTIVE, rules: list[tuple[any]]=None, model: str='en_core_web_sm'):
         self.data_dir = data_dir
         self.rules = rules
@@ -76,8 +77,6 @@ class ConlluAugmentor:
 
         self.rules.append(rule)
 
-    # note: not perfect; sometimes generates extra forms that do not exist
-    # extract first form that matches desired POS using spacy's POS tagger
     def get_forms(self, word: str, lemma: str, tag: str, nlp) -> str:
         lemma = nlp(word)[0]._.lemma()
         word = word.lower()
@@ -89,7 +88,6 @@ class ConlluAugmentor:
                     print(f'Found {tag} form for {word}: {form}')
                     return form
             return None
-        
         elif tag in ['JJ', 'JJR', 'JJS']:
             if word in self.ADVERB_TO_ADJECTIVE:
                 form = self.ADVERB_TO_ADJECTIVE[word].lower()
@@ -145,7 +143,7 @@ class ConlluAugmentor:
         aug_sentence = copy.deepcopy(sentence)
 
         for rule in shuffled_rules:
-            dep_rel, child_pos_list, head_pos_list, old_tag_list, aug_tag, child, probability = rule
+            dep_rel, child_pos_list, head_pos_list, old_tag_list, aug_tag, child, aug_feat, probability = rule
             for index, word in enumerate(aug_sentence):
                 # word matches dependency relation, child pos, and head pos
                 if word[7] == dep_rel and word[3] in child_pos_list and sentence[int(word[6])-1][3] in head_pos_list and random.uniform(0, 1) < probability: 
@@ -156,6 +154,8 @@ class ConlluAugmentor:
                                 aug_sentence[index][4] = aug_tag
                                 aug_sentence[index][1] = new_form
                                 aug_sentence[index][3] = tag_to_pos[aug_tag]
+                                if aug_feat:
+                                    aug_sentence[index][5] = aug_feat
                             else:
                                 return []
                         # update tag of head if child is False and head exists and head tag is in old_tag_list
@@ -166,6 +166,8 @@ class ConlluAugmentor:
                                 aug_sentence[head_index][4] = aug_tag 
                                 aug_sentence[head_index][1] = new_form
                                 aug_sentence[head_index][3] = tag_to_pos[aug_tag]
+                                if aug_feat:
+                                    aug_sentence[head_index][5] = aug_feat
                             else:
                                 return []
                         else:
@@ -234,7 +236,7 @@ class ConlluAugmentor:
                 batch = []
                 
                 for filename in filenames:
-                    if filename.startswith('zbatch_') or not filename.endswith('conllu'): 
+                    if filename.startswith('1zbatch_') or not filename.endswith('conllu'): 
                         continue
 
                     f = (root, os.path.join(root, filename))
@@ -266,20 +268,27 @@ class ConlluAugmentor:
             traceback.print_exc()
 
 def main():
-    data_dir = 'data/raw/onto'
+    data_dir = 'data/raw/gum_cleaned'
 
     # 1. change gerunds and past tense verbs to base form verbs
-    # 2. change adjectives to adverbs and vice versa
-    # 3. change base form verbs after modals to gerunds
-    # 4. change base form verbs after modal to past tense verbs 
-    # 5. change gerunds after prepositions to base form verbs
-    rules = [# ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VBD', 'VBG'], 'VB', False, 0.10),  <-- may be detrimental to performance
-             # ('nsubj', ['PROPN', 'NN', 'NNS'], ['VERB'], ['VB'], 'VBG', False, 0.10),         <-- may be detrimental to performance
-             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, 0.3),
-             # ('amod', ['ADJ'], ['VERB'], ['JJ'], 'RB', True, 0.30),  <-- this rule is literally never triggered so commenting out
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, 0.15),
-             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, 0.15),
-             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, 0.5), # <-- model has trouble with this rule even though high probability 
+    # 2. change plural verbs to singular and vice versa
+    # 3. change adjectives to adverbs and vice versa
+    # 4. change base form verbs after modals to gerunds
+    # 5. change base form verbs after modal to past tense verbs 
+    # 6. change gerunds after prepositions to base form verbs
+    # 7. change 'is' to 'are'
+    rules = [('nsubj', ['NOUN', 'PROPN'], ['VERB'], ['VBD', 'VBG'], 'VB', False, '', 0.25),  
+             ('nsubj', ['NOUN', 'PROPN'], ['VERB'], ['VBZ', 'VBD'], 'VBP', True, '', 0.25),
+             ('nsubj', ['NOUN', 'PROPN'], ['VERB'], ['VBP', 'VBD'], 'VBZ', True, '', 0.25),
+             ('advmod', ['ADV'], ['VERB'], ['RB'], 'JJ', True, '', 0.45),
+             ('amod', ['ADJ'], ['NOUN'], ['JJ'], 'RB', True, '', 0.30),  
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBG', False, '', 0.30),
+             ('aux', ['AUX'], ['VERB'], ['VB'], 'VBD', False, '', 0.30),
+             ('case', ['ADP'], ['VERB'], ['VBG'], 'VB', False, '', 0.60),
+             ('cop', ['AUX'], ['VERB', 'ADJ', 'ADV'], ['VBZ'], 'VBP', True, 'Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin', 0.30),
+             ('cop', ['AUX'], ['VERB', 'ADJ', 'ADV'], ['VB', 'VBP'], 'VBZ', True, 'Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin', 0.30),
+             ('cop', ['AUX'], ['VERB', 'ADJ', 'ADV'], ['VB', 'VBZ', 'VBP'], 'VBD', True, 'Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin', 0.30),
+             ('cop', ['AUX'], ['VERB', 'ADJ', 'ADV'], ['VB', 'VBD'], 'VBG', True, 'Tense=Pres|VerbForm=Part', 0.30),
             ]
     
     with open('src/adj_to_adv.txt', 'r') as f:
@@ -290,7 +299,7 @@ def main():
     ca = ConlluAugmentor(data_dir, ADJECTIVE_TO_ADVERB, ADVERB_TO_ADJECTIVE, rules=rules)
     start = time.time()
     
-    ca.run(batch_size=120)
+    ca.run(batch_size=5)
     end = time.time()
     print(f"finished in {end-start} seconds")
 

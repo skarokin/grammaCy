@@ -54,8 +54,8 @@ class Conllu2Spacy:
         self.__run_conversion__()
 
 def main():
-    in_dir = r"data/raw/onto"
-    out_dir = r"data/processed/ontoaug"
+    in_dir = r"data/raw/gum_cleaned"
+    out_dir = r"data/processed/gumaug"
     c2s = Conllu2Spacy(in_dir, out_dir, 'conllu')
     c2s.run()
 

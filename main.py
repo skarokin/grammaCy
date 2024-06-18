@@ -16,15 +16,14 @@ def main():
     # note that en_core_web_sm fails on most of the sample rules given below
     # to see our production model in action, visit https://www.grammacy.com
     # if you wish to use our production model, visit https://github.com/akuwuh/grammacy-api
-    nlp = spacy.load('en_core_web_sm')
+    nlp = spacy.load('data/models/english-v3.1/model-best')
 
     sentences = [
         'You can learning word embeddings by running the following command',                         
         'I drunk fought that guy and can learning word embeddings too',         
         'Anxious, they returned home before the storm',                        
         'This backpack was optimized for carry heavy books',
-        'She ran.',
-        'She is beautifully.'
+        'Max went to the store'
     ]
 
     rules = [
@@ -40,8 +39,7 @@ def main():
     
     for s in sentences:
         for token in nlp(s):
-            print(token.text, token.pos_, token.tag_, token.dep_, token.head.text)
-        print(em.enforce(s))
+            print(token.text, token.tag_, token.morph)
         print()
     
 if __name__ == '__main__':

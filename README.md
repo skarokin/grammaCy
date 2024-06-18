@@ -1,6 +1,9 @@
 ﻿# grammaCy
 A customizable, multi-language grammar-checking library that leverages dependency parsing to improve rule-based grammar-checking systems. 
-- You can find more comprehensive documentation [here](), including a complete English grammar and spell-checking API demo.
+
+You can find documentation, a dev blog, and a sample of our complete English model [here]().
+- Although the [symspellpy](https://github.com/mammothb/symspellpy) spell checker is included in the English model, this library focuses
+on **grammar** checking, not spell checking.
 
 Some parts of this project are inspired by this paper from Maxim Mozgovoy ["Grammar Checking with Dependency Parsing: A Possible Extension for LanguageTool"](https://mmozgovoy.dev/papers/mozgovoy11b.pdf)
 
@@ -39,14 +42,16 @@ Why not statistical models?
     - From here, simply develop a comprehensive rule set!
     - Generating suggestions is simple; use step 1.
 
+We trained a model on GUM which is currently used in production, in which step 2 was not necessary. However, running `preprocessing/remove_comments.py` was necessary to ensure this dataset could be used in our CoNLL-U augmentor. 
+
 **NOTE:** It's extremely important to ensure that the model is trained on both grammatical and ungrammatical data. If the model was only trained on grammatical data, it would always attempt to assign a grammatical sequence of POS tags and dependency relations
 - For example, if an adjective was used in place of an adverb, a model trained only on grammatical sentences would assign the adjective with an adverb part of speech. Thus, a rule-based check cannot work if the model cannot identify that this 'adverb' is actually a misplaced adjective.
 
 ### How can I use this for my own grammar rules/language?
 - Clone the repository (this library is all about providing customizable tools for building a language-independent model and developing rules, so it is not a package).
 - Gather a PTB or CoNLL-U corpus for your language of choice
-    - If using PTB (constituency parse) data, you need to use `constituency2dependency.py` in the `preprocessing/` directory.
-- Augment your data on grammar errors you wish to identify by using `conllu_augmentor.py` (multithreaded and multiprocessed) in the `preprocessing/` directory.
+    - If using PTB (constituency parse) data, you need to use `preprocessing/constituency2dependency.py`.
+- Augment your data on grammar errors you wish to identify by using `preprocessing/conllu_augmentor.py` (multithreaded and multiprocessed).
     - You can use `conllu_augmentor_singlethread.py` depending on your system requirements. Note that this file is incomplete, though.
     - I highly recommend that you first do sandbox testing on pre-trained models provided by spaCy. This not only gives you an idea of what kind of grammar errors you should introduce due to the faults of the pre-trained model, but also what grammar errors you SHOULDN'T include as it may either be detrimental to your model performance or is already well captured given the current data.
 - Convert augmented data into `.spacy` format.
