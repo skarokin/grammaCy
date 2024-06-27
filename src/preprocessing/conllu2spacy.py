@@ -34,7 +34,7 @@ class Conllu2Spacy:
 
         for file in list_of_files:
             filename = os.path.basename(file)
-            if filename.startswith("zbatch_") or filename.startswith("1zbatch_"):
+            if filename.startswith("zbatch_") or filename.startswith("1zbatch_") or filename.startswith('1zbatchexact_'):
                 print("\t" + file)
                 command = base_command + f" {file} {self.out_dir} --converter {self.CONVERTER} --file-type {self.FILE_TYPE} -n 10"
                 command_list.append(command)

@@ -236,7 +236,7 @@ class ConlluAugmentor:
                 batch = []
                 
                 for filename in filenames:
-                    if filename.startswith('1zbatch_') or not filename.endswith('conllu'): 
+                    if filename.startswith('1zbatch_') or filename.startswith('1zbatchexact_') or not filename.endswith('conllu'): 
                         continue
 
                     f = (root, os.path.join(root, filename))
