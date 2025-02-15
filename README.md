@@ -1,7 +1,7 @@
 ﻿# grammaCy
 A customizable, multi-language grammar-checking library that leverages dependency parsing to improve rule-based grammar-checking systems. 
 
-You can find documentation, a dev blog, and a sample of our complete English model [here]().
+You can find documentation, a dev blog, and a sample of our complete English model [here](https://www.github.com/skarokin/grammacy-api-prod)
 - Although the [symspellpy](https://github.com/mammothb/symspellpy) spell checker is included in the English model, this library focuses
 on **grammar** checking, not spell checking.
 
